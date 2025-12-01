@@ -207,8 +207,18 @@ const menuGroups = computed<MenuGroup[]>(() => {
             { name: 'Quản lý tickets', path: '/administrators/tickets', pro: false },
             { name: 'Quản lý tools', path: '/administrators/tools-management', pro: false },
             { name: 'Quản lý key', path: '/administrators/keys', pro: false },
+            { name: 'License Keys', path: '/administrators/license-keys', pro: false },
             { name: 'Phân quyền', path: '/administrators/permissions', pro: false },
             { name: 'Quản lý users', path: '/administrators/users', pro: false },
+          ],
+        },
+
+        {
+          name: 'Tài khoản',
+          icon: UserCircleIcon,
+          subItems: [
+            { name: 'Quản lý tài khoản', path: '/account', pro: false },
+            { name: 'Lịch sử giao dịch', path: '/transaction-history', pro: false },
           ],
         },
 

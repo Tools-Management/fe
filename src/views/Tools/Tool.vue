@@ -115,30 +115,45 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { useLinkStore } from '@/store/link.store';
+import { computed, onMounted } from 'vue';
+
+const linkStore = useLinkStore()
+
+onMounted(() => {
+  linkStore.loadLinks()
+})
 
 const handleDownload = () => {
   // Thay YOUR_FILE_ID bằng ID file thực tế trên Google Drive
-  const driveLink = 'https://drive.google.com/file/d/1A2B3C4D5E6F7G8H9I0J/view?usp=sharing'
+  const driveLink = linkStore.toolDownloadLink
   window.open(driveLink, '_blank')
 }
 
-const url = ref<string>('https://drive.google.com/file/d/1A2YHxbbFR7J-LXgm0tZvD-UEJOZm4pPZ/view?usp=drive_link')
+const introVideoUrl = computed(() => {
+  return linkStore.toolIntroVideoLink
+})
 
-const embedUrl = computed((): string => {
-  // B1: Lấy ID từ link
-  const match = url.value.match(/\/file\/d\/([^/]+)\//);
+const embedUrl = computed(() => {
+  return getEmbedUrl(introVideoUrl.value)
+})
+
+function getEmbedUrl(link: string) {
+  if (!link) return ''
+
+  // B1: Lấy ID từ Google Drive link
+  const match = link.match(/\/file\/d\/([^/]+)\//)
 
   if (!match) {
-    console.warn('Link Google Drive không hợp lệ:', url);
-    return url.value; // trả về nguyên gốc nếu sai
+    console.warn('Link Google Drive không hợp lệ:', link)
+    return link // trả về nguyên gốc nếu sai
   }
 
-  const fileId = match[1];
+  const fileId = match[1]
 
-  // B2: tạo link preview
-  return `https://drive.google.com/file/d/${fileId}/preview`;
-});
+  // B2: tạo link preview (hiển thị file trong iframe)
+  return `https://drive.google.com/file/d/${fileId}/preview`
+}
 </script>
 
 <style scoped>

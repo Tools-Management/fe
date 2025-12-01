@@ -13,9 +13,19 @@ import VueApexCharts from 'vue3-apexcharts'
 import { createPinia } from 'pinia'
 import { useAuthStore } from '@/store/auth'
 
+// Import PrimeVue
+import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
+
+// Import PrimeVue theme and icons
+import 'primeicons/primeicons.css'
+
 const pinia = createPinia()
 const app = createApp(App)
 
+// Setup PrimeVue and ToastService
+app.use(PrimeVue)
+app.use(ToastService)
 
 app.use(pinia)
 app.use(VueApexCharts)

@@ -50,6 +50,11 @@
           <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ ticket.content }}</p>
         </div>
 
+        <div>
+          <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Phản hồi</h3>
+          <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ ticket.replies }}</p>
+        </div>
+
         <div class="text-sm text-gray-500">
           Tạo lúc: {{ formatDate(ticket.createdAt) }}
         </div>
@@ -68,18 +73,10 @@
 </template>
 
 <script setup lang="ts">
+import type { DisplayTicket } from '@/types/ticket'
+
 defineProps<{
-  ticket: {
-    code: string
-    title: string
-    departmentLabel: string
-    statusLabel: string
-    statusColor: string
-    createdAt: string
-    order?: string
-    phone?: string
-    content: string
-  }
+  ticket: DisplayTicket
 }>()
 
 defineEmits(['close'])
