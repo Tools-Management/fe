@@ -7,7 +7,10 @@
       @click.prevent="toggleDropdown"
     >
       <span class="mr-3 overflow-hidden rounded-full h-11 w-11 border border-gray-200">
-        <img :src="user?.image" alt="User" />
+        <img v-if="user?.image" :src="user?.image" alt="User" />
+        <span v-else class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+          {{ user?.email[0].toUpperCase() }}
+        </span>
       </span>
 
       <span class="block mr-1 font-medium text-theme-sm" :class="isHome ? 'text-white' : ''">{{
@@ -92,7 +95,7 @@ const isHome = computed(() => route.path === '/')
 
 const baseItems = [
   { href: '/profile', icon: UserCircleIcon, text: 'Profile' },
-  { href: '/settings', icon: SettingsIcon, text: 'Account settings' },
+  // { href: '/settings', icon: SettingsIcon, text: 'Account settings' },
 ]
 
 const adminItems = [{ href: '/administrators', icon: SendIcon, text: 'Manage Users' }]

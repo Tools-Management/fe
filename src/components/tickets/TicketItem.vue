@@ -12,7 +12,7 @@
       {{ ticket.content }}
     </p>
     <div class="flex flex-wrap gap-2 text-xs text-gray-500">
-      <span>#{{ ticket.id }}</span>
+      <span>#{{ ticket.ticketId }}</span>
       <span>•</span>
       <span>{{ formatDate(ticket.createdAt) }}</span>
       <span>•</span>

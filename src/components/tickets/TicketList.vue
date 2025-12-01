@@ -1,7 +1,7 @@
 <!-- src/components/tickets/TicketList.vue -->
 <template>
   <div class="space-y-4">
-    <div v-for="ticket in tickets" :key="ticket.id">
+    <div v-for="ticket in tickets" :key="ticket.ticketId">
       <TicketItem :ticket="ticket" @select="emit('select', ticket)" />
     </div>
     <div v-if="tickets.length === 0" class="text-center py-8 text-gray-500">

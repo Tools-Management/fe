@@ -22,11 +22,17 @@
           v-if="success"
           class="mb-4 p-6 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 text-green-800 rounded-xl text-center"
         >
-          <p class="font-bold text-lg">Ticket đã được tạo thành công!</p>
+          <p class="font-bold text-lg">🎉 Ticket đã được tạo thành công!</p>
           <p class="text-sm mt-1">
-            Mã ticket: <strong>#TKT-{{ ticketId }}</strong>
+            Mã ticket: <strong>#{{ ticketId }}</strong>
           </p>
           <p class="text-sm mt-2">Chúng tôi sẽ phản hồi trong vòng 1-2 giờ làm việc.</p>
+          <router-link
+            to="/ticket-support/list"
+            class="mt-3 inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Xem danh sách ticket
+          </router-link>
         </div>
 
         <!-- Form -->
@@ -211,6 +217,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import reCapcha from '@/assets/images/reCapcha.png'
+import { useTicketStore } from '@/store/ticket.store'
+import { useToast } from '@/composables/useToast'
 
 interface TicketForm {
   department: string
@@ -220,6 +228,9 @@ interface TicketForm {
   phone: string
   notRobot: boolean
 }
+
+const ticketStore = useTicketStore()
+const { toastSuccess, toastError } = useToast()
 
 const form = reactive<TicketForm>({
   department: '',
@@ -240,23 +251,37 @@ const submitTicket = async () => {
   isSubmitting.value = true
   success.value = false
 
-  // Giả lập API call
-  await new Promise((resolve) => setTimeout(resolve, 1500))
+  try {
+    // Tạo ticket data phù hợp với server API
+    const ticketData = {
+      title: form.title,
+      content: form.content,
+      department: form.department,
+      order: form.order || undefined,
+      phone: form.phone || undefined,
+      status: 'pending' as const, // Status mặc định khi tạo
+    }
 
-  // Tạo mã ticket giả
-  ticketId.value = Math.random().toString(36).substr(2, 6).toUpperCase()
-  success.value = true
-  isSubmitting.value = false
+    await ticketStore.createTicket(ticketData)
+    success.value = true
+    toastSuccess('Ticket đã được tạo thành công!')
 
-  // Reset form
-  Object.assign(form, {
-    department: '',
-    title: '',
-    content: '',
-    order: '',
-    phone: '',
-    notRobot: false,
-  })
+    // Reset form
+    Object.assign(form, {
+      department: '',
+      title: '',
+      content: '',
+      order: '',
+      phone: '',
+      notRobot: false,
+    })
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Có lỗi xảy ra khi tạo ticket'
+    toastError(message)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 

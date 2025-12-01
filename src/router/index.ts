@@ -37,11 +37,33 @@ const router = createRouter({
           meta: { title: 'Tools', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
         },
         {
+          path: '/account',
+          name: 'AccountManagement',
+          component: () => import('@/views/Pages/AccountManagement.vue'),
+          meta: { title: 'Quản lý tài khoản', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+        },
+        {
+          path: '/transaction-history',
+          name: 'TransactionHistory',
+          component: () => import('@/views/Pages/TransactionHistory.vue'),
+          meta: { title: 'Lịch sử giao dịch', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+        },
+        {
           path: 'keys',
           name: 'KeyManagement',
           component: () => import('@/views/Keys/KeyManagement.vue'),
           meta: {
             title: 'Key Management',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN],
+          },
+        },
+        {
+          path: 'license-keys',
+          name: 'LicenseKeyManagement',
+          component: () => import('@/views/Keys/LicenseKeyManagement.vue'),
+          meta: {
+            title: 'License Key Management',
             requiresAuth: true,
             roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN],
           },
