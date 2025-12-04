@@ -102,6 +102,7 @@ onMounted(() => {
 const loadKeys = () => {
   const saved = localStorage.getItem('api_keys')
   if (saved) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keys.value = JSON.parse(saved).map((k: any) => {
       const expired = new Date(k.createdAt)
       expired.setDate(expired.getDate() + k.duration)
@@ -166,6 +167,7 @@ const copyKey = (key: string) => {
 const revokeKey = (key: ApiKey) => {
   if (confirm(`Thu hồi key ${key.key}?`)) {
     const all = JSON.parse(localStorage.getItem('api_keys') || '[]')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updated = all.map((k: any) => k.id === key.id ? { ...k, status: 'revoked' } : k)
     localStorage.setItem('api_keys', JSON.stringify(updated))
     loadKeys()

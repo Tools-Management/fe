@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="flex flex-col gap-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
     <!-- Mobile pagination -->

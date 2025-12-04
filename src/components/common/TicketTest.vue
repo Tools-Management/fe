@@ -144,6 +144,7 @@ import { useToast } from '@/composables/useToast'
 const ticketStore = useTicketStore()
 const { toastSuccess, toastError } = useToast()
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createdTicket = ref<any>(null)
 
 const testForm = reactive({
