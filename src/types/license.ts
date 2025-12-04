@@ -2,12 +2,21 @@
 
 // License Key types (matches API ILicenseKey)
 export interface ILicenseKey {
-  id: string
+  id: number
+  externalId: string
   key: string
   isActive: boolean
-  duration: string // e.g. "30d", "1y", "lifetime"
-  createdAt: string // ISO date-time
-  updatedAt: string // ISO date-time
+  duration: string // e.g. "30d", "7d", "1d"
+  isUsed: boolean
+  purchasedBy?: number | null
+  purchasedAt?: string | null
+  createdAt: string
+  updatedAt: string
+  purchaser?: {
+    id: number
+    username: string
+    email: string
+  }
 }
 
 export interface ICreateLicenseKeyRequest {
@@ -61,8 +70,40 @@ export interface LicenseStats {
 
 export interface LicenseKeyStats {
   total: number
-  active: number
-  inactive: number
+  used: number
+  available: number
+  byDuration: {
+    duration: string
+    total: number
+    used: number
+    available: number
+  }[]
+}
+
+// Purchase request
+export interface IPurchaseLicenseKeyRequest {
+  duration: string
+}
+
+// Sync response
+export interface ISyncLicenseKeysResponse {
+  synced: number
+  skipped: number
+}
+
+export interface IGenerateLicenseKeysResponse {
+  generated: number
+  keys: string[]
+}
+// License Keys Response with pagination
+export interface ILicenseKeysResponse {
+  data: ILicenseKey[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 // Display types for UI

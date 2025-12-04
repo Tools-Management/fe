@@ -217,11 +217,6 @@ const togglePasswordVisibility = () => {
 }
 
 const handleSubmit = async () => {
-  console.log('Form submitted', {
-    email: email.value,
-    password: password.value,
-    keepLoggedIn: keepLoggedIn.value,
-  })
   await authStore.login({
     email: email.value,
     password: password.value,

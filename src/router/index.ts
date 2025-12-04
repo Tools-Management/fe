@@ -25,12 +25,6 @@ const router = createRouter({
           },
         },
         {
-          path: '/profile',
-          name: 'Profile',
-          component: () => import('@/views/Others/UserProfile.vue'),
-          meta: { title: 'Profile', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
-        },
-        {
           path: '/tools',
           name: 'Tools',
           component: () => import('@/views/Tools/Tool.vue'),
@@ -47,6 +41,18 @@ const router = createRouter({
           name: 'TransactionHistory',
           component: () => import('@/views/Pages/TransactionHistory.vue'),
           meta: { title: 'Lịch sử giao dịch', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+        },
+        {
+          path: '/purchase-license',
+          name: 'PurchaseLicense',
+          component: () => import('@/views/Tools/PurchaseLicense.vue'),
+          meta: { title: 'Mua License Key', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+        },
+        {
+          path: '/my-keys',
+          name: 'MyLicenseKeys',
+          component: () => import('@/views/Tools/MyLicenseKeys.vue'),
+          meta: { title: 'Keys Đã Mua', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
         },
         {
           path: 'keys',
@@ -119,18 +125,6 @@ const router = createRouter({
             requiresAuth: true,
             roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
           },
-        },
-        {
-          path: '/basic-tables',
-          name: 'Basic Tables',
-          component: () => import('@/views/Tables/BasicTables.vue'),
-          meta: { title: 'Basic Tables', requiresAuth: true },
-        },
-        {
-          path: '/alerts',
-          name: 'Alerts',
-          component: () => import('@/views/UiElements/Alerts.vue'),
-          meta: { title: 'Alerts', requiresAuth: true },
         },
       ],
     },

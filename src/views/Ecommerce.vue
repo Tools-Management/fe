@@ -1,159 +1,184 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div class="p-4 md:p-6 space-y-8">
-      <!-- Hero Section -->
-      <div
-        class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg"
-      >
-        <h1 class="text-3xl md:text-4xl font-bold mb-3">
-          Chào mừng đến với <span class="text-yellow-300">Remake Pro</span>
-        </h1>
-        <p class="text-lg opacity-90 mb-6 max-w-3xl">
-          Nền tảng AI hàng đầu giúp bạn <strong>remake video</strong> theo phong cách Hollywood,
-          Anime, Pixar... chỉ trong vài click.
-        </p>
-        <div class="flex flex-wrap gap-3">
+  <div class="p-4 md:p-6 space-y-8">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl p-8 text-white shadow-lg">
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">
+        Chào mừng đến với <span class="text-yellow-300">Nova Tools</span>
+      </h1>
+      <p class="text-lg opacity-90 mb-6 max-w-3xl">
+        Nền tảng công cụ AI hàng đầu giúp bạn tạo nội dung chuyên nghiệp với 
+        <strong>AI Remake Video</strong>, <strong>Text to Speech</strong>, và nhiều công cụ khác.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <router-link to="/tools">
           <button
-            @click="scrollToTools"
             class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center gap-2"
           >
             <Wand2 class="w-5 h-5" />
             Khám phá Tools
           </button>
-          <button
-            @click="scrollToPricing"
-            class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
-          >
-            Xem Bảng Giá
-          </button>
+        </router-link>
+        <button
+          @click="scrollToPricing"
+          class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+        >
+          Xem Bảng Giá
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <div class="text-3xl font-bold text-blue-600">{{ stats.total }}</div>
+        <div class="text-sm text-gray-600 mt-1">Tổng License Keys</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <div class="text-3xl font-bold text-green-600">{{ stats.available }}</div>
+        <div class="text-sm text-gray-600 mt-1">Còn Khả Dụng</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <div class="text-3xl font-bold text-purple-600">{{ stats.used }}</div>
+        <div class="text-sm text-gray-600 mt-1">Đã Bán</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
+        <div class="text-3xl font-bold text-orange-600">24/7</div>
+        <div class="text-sm text-gray-600 mt-1">Hỗ trợ trực tuyến</div>
+      </div>
+    </div>
+
+    <!-- Tools Introduction -->
+    <div id="tools" class="scroll-mt-20">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <Sparkles class="w-7 h-7 text-yellow-500" />
+        Công Cụ AI Tools
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="tool in tools" :key="tool.title" class="flex">
+          <FeatureCard
+            :icon="tool.icon as any"
+            :title="tool.title"
+            :desc="tool.desc"
+            :tags="tool.tags"
+          />
         </div>
       </div>
+    </div>
 
-      <!-- Stats Overview -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
-          <div class="text-3xl font-bold text-blue-600">10K+</div>
-          <div class="text-sm text-gray-600 mt-1">Video đã remake</div>
-        </div>
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
-          <div class="text-3xl font-bold text-green-600">4.9</div>
-          <div class="text-sm text-gray-600 mt-1">Đánh giá trung bình</div>
-        </div>
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
-          <div class="text-3xl font-bold text-purple-600">50+</div>
-          <div class="text-sm text-gray-600 mt-1">Phong cách AI</div>
-        </div>
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200 text-center">
-          <div class="text-3xl font-bold text-orange-600">24/7</div>
-          <div class="text-sm text-gray-600 mt-1">Hỗ trợ trực tuyến</div>
-        </div>
-      </div>
+    <!-- Pricing & Policy -->
+    <div id="pricing" class="scroll-mt-20 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <CreditCard class="w-7 h-7 text-green-600" />
+        Bảng Giá License Key
+      </h2>
 
-      <!-- Tools Introduction -->
-      <div id="tools" class="scroll-mt-20">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <Sparkles class="w-7 h-7 text-yellow-500" />
-          Công cụ Remake Video
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="tool in tools" :key="tool.title" class="flex">
-            <FeatureCard
-              :icon="tool.icon"
-              :title="tool.title"
-              :desc="tool.desc"
-              :tags="tool.tags"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Pricing & Policy -->
-      <div id="pricing" class="scroll-mt-20 bg-gray-50 rounded-2xl">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <CreditCard class="w-7 h-7 text-green-600" />
-          Bảng Giá & Chính Sách
-        </h2>
-
-        <div class="grid md:grid-cols-2 gap-8">
-          <!-- Pricing -->
-          <div class="w-full">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Gói Credits</h3>
-            <div class="space-y-4">
-              <div class="bg-white rounded-lg p-4 border border-gray-200">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <div class="font-semibold">Gói Cơ Bản</div>
-                    <div class="text-sm text-gray-600">100 credits</div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Pricing -->
+        <div class="w-full">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Gói License Key</h3>
+          <div class="space-y-4">
+            <div 
+              v-for="plan in pricingPlans" 
+              :key="plan.duration"
+              class="bg-white rounded-lg p-4 border-2 transition-all hover:border-blue-400 hover:shadow-lg cursor-pointer"
+              :class="plan.popular ? 'border-purple-400 shadow-md' : 'border-gray-200'"
+            >
+              <div class="flex justify-between items-center">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <div class="font-semibold text-lg">{{ plan.label }}</div>
+                    <span v-if="plan.popular" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                      PHỔ BIẾN
+                    </span>
                   </div>
-                  <div class="text-xl font-bold text-blue-600">99.000đ</div>
+                  <div class="text-sm text-gray-600 mt-1">{{ plan.duration }} sử dụng</div>
+                  <div v-if="'savings' in plan && plan.savings" class="text-xs text-green-600 font-semibold mt-1">
+                    💰 Tiết kiệm {{ plan.savings }}
+                  </div>
                 </div>
-              </div>
-              <div class="bg-white rounded-lg p-4 border border-gray-200">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <div class="font-semibold">Gói Pro</div>
-                    <div class="text-sm text-gray-600">500 credits + ưu tiên</div>
+                <div class="text-right">
+                  <div class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    {{ plan.priceDisplay }}
                   </div>
-                  <div class="text-xl font-bold text-green-600">399.000đ</div>
-                </div>
-              </div>
-              <div class="bg-white rounded-lg p-4 border border-gray-200">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <div class="font-semibold">Gói Doanh Nghiệp</div>
-                    <div class="text-sm text-gray-600">Không giới hạn</div>
+                  <div class="text-xs text-gray-500 mt-1">
+                    Còn {{ getAvailableKeys(plan.duration) }} keys
                   </div>
-                  <div class="text-xl font-bold text-purple-600">Liên hệ</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Policy -->
-          <div class="w-full">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Chính Sách Sử Dụng</h3>
-            <ul class="space-y-3 text-sm text-gray-700">
-              <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
-                <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-                <span><strong>Hoàn tiền 100%</strong> nếu video lỗi do hệ thống.</span>
-              </li>
-              <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
-                <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-                <span><strong>Không lưu video</strong> sau 7 ngày (bảo mật tuyệt đối).</span>
-              </li>
-              <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
-                <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-                <span><strong>Hỗ trợ 24/7</strong> qua Telegram, Zalo, Email.</span>
-              </li>
-              <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
-                <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-                <span><strong>Cập nhật AI mới</strong> hàng tuần, miễn phí.</span>
-              </li>
-              <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
-                <XCircle class="w-5 h-5 text-red-600 flex-shrink-0" />
-                <span><strong>Cấm</strong> nội dung vi phạm bản quyền, khiêu dâm, bạo lực.</span>
-              </li>
-            </ul>
-          </div>
+          <!-- CTA Button -->
+          <router-link to="/purchase-license">
+            <button class="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+              <ShoppingCart class="w-5 h-5" />
+              Mua License Key Ngay
+            </button>
+          </router-link>
+        </div>
+
+        <!-- Policy -->
+        <div class="w-full">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Chính Sách Sử Dụng</h3>
+          <ul class="space-y-3 text-sm text-gray-700">
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span><strong>Kích hoạt ngay lập tức</strong> sau khi thanh toán thành công.</span>
+            </li>
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span><strong>Hỗ trợ 24/7</strong> qua Telegram, Zalo, Email.</span>
+            </li>
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span><strong>Cập nhật miễn phí</strong> các công cụ mới.</span>
+            </li>
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span><strong>Bảo mật tuyệt đối</strong> thông tin cá nhân.</span>
+            </li>
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <AlertCircle class="w-5 h-5 text-blue-600 flex-shrink-0" />
+              <span><strong>1 key = 1 thiết bị</strong> - Không được chia sẻ.</span>
+            </li>
+            <li class="flex gap-2 bg-white rounded-lg p-4 border border-gray-200">
+              <XCircle class="w-5 h-5 text-red-600 flex-shrink-0" />
+              <span><strong>Không hoàn tiền</strong> sau khi đã nhận key.</span>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
 
-      <!-- CTA Final -->
-      <div class="text-center py-8">
-        <p class="text-lg text-gray-700 mb-4">Sẵn sàng bắt đầu?</p>
+    <!-- CTA Final -->
+    <div class="text-center py-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl">
+      <p class="text-2xl text-white font-bold mb-4">Sẵn sàng bắt đầu?</p>
+      <p class="text-white/90 mb-6">Chọn gói phù hợp và bắt đầu sử dụng công cụ ngay hôm nay!</p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <router-link to="/purchase-license">
+          <button
+            class="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition shadow-lg flex items-center gap-3"
+          >
+            <ShoppingCart class="w-6 h-6" />
+            Mua License Key
+          </button>
+        </router-link>
         <router-link to="/tools">
           <button
-          
-          class="bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition shadow-lg flex items-center gap-3 mx-auto"
-        >
-          <Play class="w-6 h-6" />
-          Tạo Video Đầu Tiên – Miễn Phí 10 Credits!
-        </button>
+            class="border-2 border-white text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white hover:text-blue-600 transition flex items-center gap-3"
+          >
+            <Play class="w-6 h-6" />
+            Dùng Thử Tools
+          </button>
         </router-link>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import FeatureCard from './FeatureCard.vue'
 import {
   Wand2,
@@ -162,9 +187,25 @@ import {
   CheckCircle,
   XCircle,
   Play,
+  ShoppingCart,
+  AlertCircle,
 } from 'lucide-vue-next'
+import { LICENSE_PRICING } from '@/constants'
+import { useLicenseKeyStore } from '@/store/license_key.store'
 
+// Store
+const licenseKeyStore = useLicenseKeyStore()
 
+// Computed
+const stats = computed(() => licenseKeyStore.stats || { total: 0, available: 0, used: 0 })
+const pricingPlans = computed(() => Object.values(LICENSE_PRICING))
+
+// Methods
+const getAvailableKeys = (duration: string): number => {
+  if (!stats.value?.byDuration) return 0
+  const durationStats = stats.value.byDuration.find(d => d.duration === duration)
+  return durationStats?.available || 0
+}
 
 // Dữ liệu tools
 const tools = [
@@ -176,41 +217,42 @@ const tools = [
   },
   {
     icon: 'Music',
-    title: 'Thêm Âm Thanh & Hiệu Ứng',
-    desc: 'Tự động thêm nhạc nền, voice-over, text overlay, chuyển cảnh mượt mà.',
-    tags: ['Thư viện 10K+ nhạc', 'TTS đa ngôn ngữ'],
+    title: 'Text to Speech',
+    desc: 'Chuyển văn bản thành giọng nói tự nhiên với hơn 100+ giọng đọc đa ngôn ngữ.',
+    tags: ['100+ giọng', 'Đa ngôn ngữ'],
   },
   {
     icon: 'Scissors',
-    title: 'Cắt Ghép Thông Minh',
+    title: 'Cắt Ghép Video',
     desc: 'Cắt đoạn, ghép video, xóa nền, tách lời thoại chỉ trong 1 click.',
-    tags: ['AI detect scene', 'Tốc độ x10'],
+    tags: ['AI detect', 'Nhanh x10'],
   },
   {
     icon: 'Download',
-    title: 'Xuất Video Chuyên Nghiệp',
+    title: 'Xuất Video Pro',
     desc: '1080p, 4K, thêm watermark, logo, phụ đề, tối ưu cho YouTube/TikTok.',
-    tags: ['Không watermark', 'Tải ngay'],
+    tags: ['Chất lượng cao', 'Tải ngay'],
   },
   {
     icon: 'Youtube',
     title: 'Phân Tích YouTube',
     desc: 'Nhập link → AI phân tích → remake lại video theo phong cách bạn muốn.',
-    tags: ['Hỗ trợ Shorts', 'Tự động'],
+    tags: ['Hỗ trợ Shorts', 'Auto'],
   },
   {
     icon: 'Zap',
-    title: 'Tăng Tốc Xử Lý',
-    desc: 'Ưu tiên xử lý nhanh, nhận video trong 2–5 phút với gói Pro.',
-    tags: ['Queue ưu tiên', 'GPU x100'],
+    title: 'Xử Lý Nhanh',
+    desc: 'Ưu tiên xử lý, nhận kết quả trong vài phút với công nghệ GPU mạnh mẽ.',
+    tags: ['Ưu tiên', 'GPU x100'],
   },
 ]
-
-const scrollToTools = () => {
-  document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })
-}
 
 const scrollToPricing = () => {
   document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
 }
+
+// Lifecycle
+onMounted(async () => {
+  await licenseKeyStore.getLicenseKeyStats()
+})
 </script>

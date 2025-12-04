@@ -110,7 +110,6 @@ import type { IGenerateLicenseKeysRequest } from '@/types/license'
 
 const emit = defineEmits<{
   close: []
-  generated: []
 }>()
 
 const licenseKeyStore = useLicenseKeyStore()
@@ -130,15 +129,8 @@ const submit = async () => {
   generatedKeys.value = []
 
   try {
-    const result = await licenseKeyStore.generateLicenseKeys(form.value)
-
-    if (result) {
-      // Extract keys from the result
-      generatedKeys.value = result.keys.map(key => key.key)
-      emit('generated')
-    } else {
-      alert('Có lỗi xảy ra khi tạo license keys!')
-    }
+    await licenseKeyStore.generateLicenseKeys(form.value)
+      emit('close')
   } catch (error) {
     console.error('Failed to generate license keys:', error)
     alert('Có lỗi xảy ra khi tạo license keys!')

@@ -5,24 +5,75 @@ import type {
   ILicenseKey,
   ICreateLicenseKeyRequest,
   IUpdateLicenseKeyRequest,
-  IGenerateLicenseKeysRequest
+  IGenerateLicenseKeysRequest,
+  LicenseKeyStats,
+  IPurchaseLicenseKeyRequest,
+  ISyncLicenseKeysResponse,
+  ILicenseKeysResponse,
+  IGenerateLicenseKeysResponse,
 } from "@/types/license"
 import type { ResponseError } from "@/utils/error"
 
 export interface ILicenseKeyService {
-  getAllLicenseKeys: () => Promise<ApiResponse<ILicenseKey[]> | ResponseError>
+  // New endpoints for internal license key management
+  getAllLicenseKeys: (params?: {
+    page?: number
+    limit?: number
+    duration?: string
+    isUsed?: boolean
+    isActive?: boolean
+  }) => Promise<ApiResponse<ILicenseKeysResponse> | ResponseError>
+  getLicenseKeyStats: () => Promise<ApiResponse<LicenseKeyStats> | ResponseError>
+  getMyLicenseKeys: () => Promise<ApiResponse<ILicenseKey[]> | ResponseError>
+  syncLicenseKeys: () => Promise<ApiResponse<ISyncLicenseKeysResponse> | ResponseError>
+  purchaseLicenseKey: (data: IPurchaseLicenseKeyRequest) => Promise<ApiResponse<{ key: string; duration: string; purchasedAt: string }> | ResponseError>
+  deleteLicenseKey: (id: number) => Promise<ApiResponse<void> | ResponseError>
+  
+  // Old endpoints for external API management
   getLicenseKeyById: (id: string) => Promise<ApiResponse<ILicenseKey> | ResponseError>
   createLicenseKey: (licenseKey: ICreateLicenseKeyRequest) => Promise<ApiResponse<ILicenseKey> | ResponseError>
   updateLicenseKey: (id: string, licenseKey: IUpdateLicenseKeyRequest) => Promise<ApiResponse<ILicenseKey> | ResponseError>
-  deleteLicenseKey: (id: string) => Promise<ApiResponse<ILicenseKey> | ResponseError>
-  generateLicenseKeys: (request: IGenerateLicenseKeysRequest) => Promise<ApiResponse<ILicenseKey[]> | ResponseError>
+  deleteLicenseKeyExternal: (id: string) => Promise<ApiResponse<ILicenseKey> | ResponseError>
+  generateLicenseKeys: (request: IGenerateLicenseKeysRequest) => Promise<ApiResponse<IGenerateLicenseKeysResponse> | ResponseError>
 }
 
 class LicenseKeyService implements ILicenseKeyService {
-  getAllLicenseKeys(): Promise<ApiResponse<ILicenseKey[]> | ResponseError> {
-    return apiService(API_ROUTES.LICENSE_KEYS.GET_ALL).get<ILicenseKey[]>()
+  // New endpoints
+  getAllLicenseKeys(params?: {
+    page?: number
+    limit?: number
+    duration?: string
+    isUsed?: boolean
+    isActive?: boolean
+  }): Promise<ApiResponse<ILicenseKeysResponse> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.GET_ALL)
+      .addQueryParam({...params})
+      .get<ILicenseKeysResponse>()
   }
 
+  getLicenseKeyStats(): Promise<ApiResponse<LicenseKeyStats> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.GET_STATS).get<LicenseKeyStats>()
+  }
+
+  getMyLicenseKeys(): Promise<ApiResponse<ILicenseKey[]> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.GET_MY_KEYS).get<ILicenseKey[]>()
+  }
+
+  syncLicenseKeys(): Promise<ApiResponse<ISyncLicenseKeysResponse> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.SYNC).post<ISyncLicenseKeysResponse>()
+  }
+
+  purchaseLicenseKey(data: IPurchaseLicenseKeyRequest): Promise<ApiResponse<{ key: string; duration: string; purchasedAt: string }> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.PURCHASE).post<{ key: string; duration: string; purchasedAt: string }>(data)
+  }
+
+  deleteLicenseKey(id: number): Promise<ApiResponse<void> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.DELETE)
+      .addPathParam(':id', id.toString())
+      .delete<void>()
+  }
+
+  // Old endpoints (for external API)
   getLicenseKeyById(id: string): Promise<ApiResponse<ILicenseKey> | ResponseError> {
     return apiService(API_ROUTES.LICENSE_KEYS.GET_BY_ID).addPathParam(':id', id).get<ILicenseKey>()
   }
@@ -35,12 +86,12 @@ class LicenseKeyService implements ILicenseKeyService {
     return apiService(API_ROUTES.LICENSE_KEYS.UPDATE).addPathParam(':id', id).put<ILicenseKey>(licenseKey)
   }
 
-  deleteLicenseKey(id: string): Promise<ApiResponse<ILicenseKey> | ResponseError> {
-    return apiService(API_ROUTES.LICENSE_KEYS.DELETE).addPathParam(':id', id).delete<ILicenseKey>()
+  deleteLicenseKeyExternal(id: string): Promise<ApiResponse<ILicenseKey> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.DELETE_EXTERNAL).addPathParam(':id', id).delete<ILicenseKey>()
   }
 
-  generateLicenseKeys(request: IGenerateLicenseKeysRequest): Promise<ApiResponse<ILicenseKey[]> | ResponseError> {
-    return apiService(API_ROUTES.LICENSE_KEYS.GENERATE).post<ILicenseKey[]>(request)
+  generateLicenseKeys(request: IGenerateLicenseKeysRequest): Promise<ApiResponse<IGenerateLicenseKeysResponse> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.GENERATE).post<IGenerateLicenseKeysResponse>(request)
   }
 }
 
