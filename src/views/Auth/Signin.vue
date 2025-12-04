@@ -1,4 +1,5 @@
-<template>
+<!-- eslint-disable vue/multi-word-component-names -->
+ <template>
   <FullScreenLayout>
     <div class="relative p-6 bg-white dark:bg-gray-900 sm:p-0">
       <div class="relative flex flex-col justify-center w-full h-screen lg:flex-row dark:bg-gray-900">

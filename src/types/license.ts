@@ -7,6 +7,7 @@ export interface ILicenseKey {
   key: string
   isActive: boolean
   duration: string // e.g. "30d", "7d", "1d"
+  usedCount?: number
   isUsed: boolean
   purchasedBy?: number | null
   purchasedAt?: string | null

@@ -54,7 +54,7 @@
           <div class="grid grid-cols-2 gap-2">
             <div>
               <span class="font-medium">Đã sử dụng:</span>
-              <span class="ml-1">{{ licenseKey.usedCount || 0 }} lần</span>
+              <span class="ml-1">{{ licenseKey?.usedCount ?? 0 }} lần</span>
             </div>
             <div>
               <span class="font-medium">Ngày tạo:</span>
@@ -128,10 +128,10 @@ const submit = async () => {
 
   isSubmitting.value = true
   try {
-    await licenseKeyStore.updateLicenseKey(props.licenseKey.id, form.value)
+    await licenseKeyStore.updateLicenseKey(props.licenseKey.id.toString(), form.value)
     emit('updated')
-  } catch (error) {
-    console.error('Failed to update license key:', error)
+  } catch {
+    console.error('Failed to update license key')
     alert('Có lỗi xảy ra khi cập nhật license key!')
   } finally {
     isSubmitting.value = false

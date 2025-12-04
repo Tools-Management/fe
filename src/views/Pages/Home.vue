@@ -228,13 +228,6 @@ const isAuthenticated = computed(() => authStore.isLoggedIn)
 const stats = computed(() => licenseKeyStore.stats || { total: 0, available: 0, used: 0 })
 const pricingPlans = computed(() => Object.values(LICENSE_PRICING))
 
-// Methods
-const getAvailableKeys = (duration: string): number => {
-  if (!stats.value?.byDuration) return 0
-  const durationStats = stats.value.byDuration.find(d => d.duration === duration)
-  return durationStats?.available || 0
-}
-
 const handleGetStarted = () => {
   router.push('/signin')
 }

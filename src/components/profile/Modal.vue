@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
     <div

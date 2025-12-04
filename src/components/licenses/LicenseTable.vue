@@ -130,7 +130,7 @@ defineProps<{
 defineEmits<{
   validate: [license: ILicense]
   deactivate: [license: ILicense]
-  activate?: [license: ILicense]
+  activate: [license: ILicense]
 }>()
 
 const getStatusLabel = (status: string): string => {

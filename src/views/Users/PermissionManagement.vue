@@ -26,9 +26,10 @@
           Chọn vai trò để phân quyền
         </label>
         <div class="flex flex-wrap gap-3">
+          <!-- eslint-disable-next-line vue/no-side-effects-in-computed-properties -->
           <button
             v-for="role in roles"
-            :key="role.value"
+            :key="role.value" 
             @click="selectedRole = role.value"
             :class="[
               'px-5 py-2.5 rounded-lg font-medium transition',
@@ -46,7 +47,6 @@
       <component-card title="Danh Sách Quyền">
         <permission-table
           :role="selectedRole"
-          @update="handlePermissionUpdate"
         />
       </component-card>
 
@@ -75,10 +75,6 @@ const roles = [
   { value: 'ROLE_STAFF_1', label: 'Staff 1' },
   { value: 'ROLE_STAFF_2', label: 'Staff 2' }
 ]
-
-const handlePermissionUpdate = () => {
-  // Tự động lưu khi thay đổi
-}
 
 const savePermissions = async () => {
   isSaving.value = true

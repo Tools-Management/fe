@@ -121,6 +121,7 @@ const modules = ref<Module[]>([
   { id: 'remake', name: 'Remake Video', route: '/remake', icon: '🎬' }
 ])
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const permissions = ref<Record<string, any>>({})
 
 onMounted(() => {
@@ -133,6 +134,7 @@ const loadPermissions = () => {
     permissions.value = JSON.parse(saved)
   } else {
     // Mặc định
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultPerms: Record<string, any> = {}
     const roles = ['ROLE_ADMIN', 'ROLE_STAFF_1', 'ROLE_STAFF_2', 'ROLE_USER']
     
@@ -177,6 +179,7 @@ const loadPermissions = () => {
     
     permissions.value = defaultPerms
     // Lưu vào global để các trang khác dùng
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(window as any).rolePermissions = defaultPerms
   }
 }
