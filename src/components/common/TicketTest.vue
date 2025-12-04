@@ -157,7 +157,7 @@ const testGetMyTickets = async () => {
   try {
     await ticketStore.getMyTickets()
     toastSuccess(`Loaded ${ticketStore.tickets.length} tickets`)
-  } catch (error) {
+  } catch {
     toastError('Failed to load tickets')
   }
 }
@@ -184,7 +184,7 @@ const testCreateTicket = async () => {
     })
 
     toastSuccess('Ticket created successfully!')
-  } catch (error) {
+  } catch {
     toastError('Failed to create ticket')
   }
 }
