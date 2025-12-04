@@ -146,7 +146,6 @@ const daysOfWeek = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 
 const calendarDays = computed(() => {
   const firstDay = new Date(currentYear.value, currentMonth.value, 1)
-  const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0)
   const startDate = new Date(firstDay)
   startDate.setDate(startDate.getDate() - firstDay.getDay())
 
@@ -181,7 +180,7 @@ const checkDisabled = (dateString: string) => {
   return false
 }
 
-const selectDate = (day: any) => {
+const selectDate = (day: { isDisabled: boolean; date: string }) => {
   if (day.isDisabled) return
   emit('update:modelValue', day.date)
   showCalendar.value = false
