@@ -49,12 +49,18 @@ export const API_ROUTES = {
     ACTIVATE: '/api-management/licenses/activate',
   },
   LICENSE_KEYS: {
-    BASE: '/api-management/license-keys',
-    GET_ALL: '/api-management/license-keys',
+    BASE: '/license-keys',
+    GET_ALL: '/license-keys',
+    GET_STATS: '/license-keys/stats',
+    GET_MY_KEYS: '/license-keys/my-keys',
+    SYNC: '/license-keys/sync',
+    PURCHASE: '/license-keys/purchase',
+    DELETE: '/license-keys/:id',
+    // Old endpoints (for external API)
     GET_BY_ID: '/api-management/license-keys/:id',
     CREATE: '/api-management/license-keys',
     UPDATE: '/api-management/license-keys/:id',
-    DELETE: '/api-management/license-keys/:id',
+    DELETE_EXTERNAL: '/api-management/license-keys/:id',
     GENERATE: '/api-management/license-keys/generate/batch',
   },
 }

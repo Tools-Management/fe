@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
     class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden"
@@ -9,18 +10,20 @@
           <span
             class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent"
           >
-            Remake Video Tự Động
+          AIRemake Tools
           </span>
           <br />
-          <span class="text-white">Bằng AI Siêu Thông Minh</span>
+          <span class="text-white">Công Cụ AI Siêu Thông Minh</span>
         </h1>
         <p class="mt-6 text-xl text-gray-300 max-w-2xl mx-auto">
-          Thuê ngay công cụ AI remake video tự động, đa nền tảng (YouTube, TikTok, Facebook,
-          Instagram). Tối ưu SEO, tránh bản quyền, tăng view & sub chỉ trong vài click.
+          Bộ công cụ AI đa năng cho creator: Remake Video, Text to Speech, Cắt Ghép Video, 
+          và nhiều hơn nữa. Tối ưu cho YouTube, TikTok, Facebook, Instagram.
         </p>
 
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <button
+            v-if="!isAuthenticated"
+            @click="handleGetStarted"
             class="bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,25 +34,41 @@
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            Thuê Ngay Chỉ Từ 99k/tháng
+            Bắt Đầu Ngay - Miễn Phí
           </button>
+          <router-link v-else to="/purchase-license">
+            <button
+              class="bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              Mua License Key Ngay
+            </button>
+          </router-link>
           <button
+            @click="handleViewDemo"
             class="border border-purple-500 px-8 py-4 rounded-xl font-semibold hover:bg-purple-500/20 transition"
           >
-            Xem Demo Video
+            {{ isAuthenticated ? 'Vào Dashboard' : 'Xem Demo & Tính Năng' }}
           </button>
         </div>
 
         <!-- Trust badges -->
         <div class="mt-16 flex flex-wrap justify-center gap-8 text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="text-green-400">Check</span> Đã remake 10M+ video
+            <span class="text-green-400">✓</span> {{ isAuthenticated ? `${stats.total}+ license keys` : 'Hàng trăm license keys có sẵn' }}
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-green-400">Check</span> 5000+ khách hàng tin dùng
+            <span class="text-green-400">✓</span> {{ isAuthenticated ? `${stats.used + 500}+ khách hàng` : '500+ khách hàng tin dùng' }}
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-green-400">Check</span> Hỗ trợ 24/7
+            <span class="text-green-400">✓</span> Hỗ trợ 24/7
           </div>
         </div>
       </div>
@@ -84,77 +103,69 @@
       <div class="max-w-5xl mx-auto">
         <h2 class="text-4xl font-bold mb-6">
           <span class="bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">
-            Giá Thuê Siêu Hấp Dẫn
+            Bảng Giá License Key
           </span>
         </h2>
         <p class="text-xl text-gray-300 mb-12">
-          Chỉ từ <strong class="text-3xl text-pink-400">99.000đ/tháng</strong> cho gói cơ bản
+          Chỉ từ <strong class="text-3xl text-pink-400">300.000đ/tháng</strong> - Kích hoạt ngay lập tức
         </p>
 
-        <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           <div
-            class="bg-gradient-to-br from-pink-600/20 to-purple-600/20 backdrop-blur-md border border-pink-500/50 rounded-2xl p-8"
-          >
-            <h3 class="text-2xl font-bold mb-4">Gói Starter</h3>
-            <p class="text-4xl font-bold text-pink-400 mb-6">
-              99k <span class="text-sm text-gray-400">/tháng</span>
-            </p>
-            <ul class="text-left text-gray-300 space-y-2 mb-8">
-              <li>Check 500 video/tháng</li>
-              <li>Check 3 nền tảng</li>
-              <li>Check Hỗ trợ cơ bản</li>
-            </ul>
-            <button
-              class="w-full bg-pink-600 py-3 rounded-xl font-bold hover:bg-pink-700 transition"
-            >
-              Chọn gói
-            </button>
-          </div>
-
-          <div
-            class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-8 transform scale-105 shadow-2xl border border-purple-400"
+            v-for="plan in pricingPlans"
+            :key="plan.duration"
+            class="rounded-2xl p-8 transform transition-all hover:scale-105"
+            :class="plan.popular 
+              ? 'bg-gradient-to-br from-purple-600 to-indigo-700 shadow-2xl border-2 border-purple-400 scale-105' 
+              : 'bg-gradient-to-br from-pink-600/20 to-purple-600/20 backdrop-blur-md border border-pink-500/50'"
           >
             <div
+              v-if="plan.popular"
               class="bg-yellow-400 text-purple-900 text-xs font-bold px-3 py-1 rounded-full inline-block mb-4"
             >
               Phổ biến nhất
             </div>
-            <h3 class="text-2xl font-bold mb-4 text-white">Gói Pro</h3>
-            <p class="text-4xl font-bold text-white mb-6">
-              299k <span class="text-sm text-gray-300">/tháng</span>
+            <h3 class="text-2xl font-bold mb-4" :class="plan.popular ? 'text-white' : ''">
+              {{ plan.label }}
+            </h3>
+            <p class="text-3xl text-center font-bold mb-2" :class="plan.popular ? 'text-white' : 'text-pink-400'">
+              {{ plan.priceDisplay }}
             </p>
-            <ul class="text-left text-gray-200 space-y-2 mb-8">
-              <li>Check 5000 video/tháng</li>
-              <li>Check 10+ nền tảng</li>
-              <li>Check AI chống bản quyền</li>
-              <li>Check Hỗ trợ ưu tiên 24/7</li>
-            </ul>
-            <button
-              class="w-full bg-white text-purple-700 py-3 rounded-xl font-bold hover:bg-gray-100 transition"
-            >
-              Chọn gói
-            </button>
-          </div>
+            <p class="text-sm mb-6" :class="plan.popular ? 'text-gray-200' : 'text-gray-400'">
+              {{ plan.duration }}
+            </p>
+            
+            <div v-if="'savings' in plan && plan.savings" class="mb-4">
+              <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                Tiết kiệm {{ plan.savings }}
+              </span>
+            </div>
 
-          <div
-            class="bg-gradient-to-br from-indigo-600/20 to-pink-600/20 backdrop-blur-md border border-indigo-500/50 rounded-2xl p-8"
-          >
-            <h3 class="text-2xl font-bold mb-4">Gói Agency</h3>
-            <p class="text-4xl font-bold text-indigo-400 mb-6">
-              799k <span class="text-sm text-gray-400">/tháng</span>
-            </p>
-            <ul class="text-left text-gray-300 space-y-2 mb-8">
-              <li>Check Không giới hạn</li>
-              <li>Check API riêng</li>
-              <li>Check White-label</li>
-              <li>Check Quản lý team</li>
+            <ul class="text-left space-y-2 mb-8" :class="plan.popular ? 'text-gray-200' : 'text-gray-300'">
+              <li v-for="feature in plan.features.slice(0, 3)" :key="feature" class="flex items-start gap-2">
+                <span class="text-green-400 flex-shrink-0">✓</span>
+                <span class="text-sm">{{ feature }}</span>
+              </li>
             </ul>
+
             <button
-              class="w-full bg-indigo-600 py-3 rounded-xl font-bold hover:bg-indigo-700 transition"
+              @click="handleSelectPlan"
+              class="w-full py-3 rounded-xl font-bold transition"
+              :class="plan.popular 
+                ? 'bg-white text-purple-700 hover:bg-gray-100' 
+                : 'bg-pink-600 hover:bg-pink-700'"
             >
-              Liên hệ
+              {{ isAuthenticated ? 'Chọn gói này' : 'Đăng nhập để mua' }}
             </button>
           </div>
+        </div>
+
+        <div v-if="isAuthenticated" class="mt-8">
+          <router-link to="/purchase-license">
+            <button class="text-purple-300 hover:text-white underline">
+              Xem chi tiết tất cả gói →
+            </button>
+          </router-link>
         </div>
       </div>
     </section>
@@ -163,48 +174,110 @@
     <section class="relative z-10 container mx-auto px-6 py-20 text-center">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-4xl md:text-5xl font-bold mb-6">
-          Sẵn sàng <span class="text-pink-400">tăng trưởng kênh</span> của bạn?
+          Sẵn sàng <span class="text-pink-400">tăng trưởng</span> với AI?
         </h2>
         <p class="text-xl text-gray-300 mb-10">
-          Hàng ngàn creator đã remake thành công hàng triệu video. Đến lượt bạn!
+          Hàng trăm creator đã tin dùng Nova AI Tools. Đến lượt bạn!
         </p>
-        <button
-          class="bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
-        >
-          Bắt Đầu Ngay – Miễn Phí 7 Ngày
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            v-if="!isAuthenticated"
+            @click="handleGetStarted"
+            class="bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
+          >
+            Đăng Ký Ngay - Miễn Phí
+          </button>
+          <template v-else>
+            <router-link to="/purchase-license">
+              <button
+                class="bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
+              >
+                Mua License Key Ngay
+              </button>
+            </router-link>
+            <router-link to="/my-keys">
+              <button
+                class="border-2 border-purple-500 px-10 py-5 rounded-full text-xl font-bold hover:bg-purple-500/20 transition"
+              >
+                Xem Keys Đã Mua
+              </button>
+            </router-link>
+          </template>
+        </div>
       </div>
     </section>
-
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { LICENSE_PRICING } from '@/constants'
+import { useLicenseKeyStore } from '@/store/license_key.store'
+import { useAuthStore } from '@/store/auth'
+
+// Router
+const router = useRouter()
+
+// Store
+const licenseKeyStore = useLicenseKeyStore()
+const authStore = useAuthStore()
+
+// Computed
+const isAuthenticated = computed(() => authStore.isLoggedIn)
+const stats = computed(() => licenseKeyStore.stats || { total: 0, available: 0, used: 0 })
+const pricingPlans = computed(() => Object.values(LICENSE_PRICING))
+
+// Methods
+const getAvailableKeys = (duration: string): number => {
+  if (!stats.value?.byDuration) return 0
+  const durationStats = stats.value.byDuration.find(d => d.duration === duration)
+  return durationStats?.available || 0
+}
+
+const handleGetStarted = () => {
+  router.push('/signin')
+}
+
+const handleViewDemo = () => {
+  if (isAuthenticated.value) {
+    router.push('/administrators')
+  } else {
+    router.push('/signin')
+  }
+}
+
+const handleSelectPlan = () => {
+  if (isAuthenticated.value) {
+    router.push('/purchase-license')
+  } else {
+    router.push('/signin')
+  }
+}
+
 // SVG Icons as string (safe with v-html)
 const features = ref([
   {
-    title: 'AI Chống Bản Quyền',
-    desc: 'Tự động chỉnh sửa video, thay đổi âm thanh, hiệu ứng để tránh bị phát hiện.',
+    title: 'AI Remake Video',
+    desc: 'Tự động remake video với 50+ phong cách: Anime, Pixar, Hollywood, LEGO... Tránh bản quyền hiệu quả.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
       </svg>
     `,
   },
   {
-    title: 'Đa Nền Tảng',
-    desc: 'Tự động đăng lên YouTube, TikTok, Facebook, Instagram Reels, Shorts cùng lúc.',
+    title: 'Text to Speech AI',
+    desc: 'Chuyển văn bản thành giọng nói tự nhiên với 100+ giọng đọc đa ngôn ngữ. Hoàn hảo cho video, podcast.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
       </svg>
     `,
   },
   {
-    title: 'Tự Động 100%',
-    desc: 'Chỉ cần thêm link → AI xử lý → đăng tự động theo lịch bạn đặt.',
+    title: 'Công Cụ Đa Năng',
+    desc: 'Cắt ghép video, xóa nền, xuất 4K, phân tích YouTube, và nhiều công cụ khác trong 1 license key.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -212,6 +285,14 @@ const features = ref([
     `,
   },
 ])
+
+// Lifecycle
+onMounted(async () => {
+  // Only load stats if authenticated
+  if (isAuthenticated.value) {
+    await licenseKeyStore.getLicenseKeyStats()
+  }
+})
 </script>
 
 <style scoped>

@@ -58,7 +58,7 @@
         <LogoutIcon
           class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300"
         />
-        Sign out
+        Đăng xuất
       </button>
     </div>
     <!-- Dropdown End -->
@@ -67,10 +67,8 @@
 
 <script setup lang="ts">
 import {
-  UserCircleIcon,
   ChevronDownIcon,
   LogoutIcon,
-  SettingsIcon,
   SendIcon,
 } from '@/icons/index'
 import { RouterLink, useRoute } from 'vue-router'
@@ -87,20 +85,11 @@ const authStore = useAuthStore()
 const user = computed(() => authStore.user)
 const isAdmin = computed(() => authStore.isAdmin)
 
-console.log("user", user.value);
-
-
-
 const isHome = computed(() => route.path === '/')
 
-const baseItems = [
-  { href: '/profile', icon: UserCircleIcon, text: 'Profile' },
-  // { href: '/settings', icon: SettingsIcon, text: 'Account settings' },
-]
+const adminItems = [{ href: '/administrators', icon: SendIcon, text: 'Quản trị' }]
 
-const adminItems = [{ href: '/administrators', icon: SendIcon, text: 'Manage Users' }]
-
-const menuItems = computed(() => (isAdmin.value ? [...baseItems, ...adminItems] : baseItems))
+const menuItems = computed(() => (isAdmin.value ? [...adminItems] : []))
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value

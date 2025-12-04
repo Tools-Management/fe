@@ -1,5 +1,6 @@
 <!-- src/views/Keys/LicenseKeyManagement.vue -->
 <template>
+  <LoadingBase :is-loading="licenseKeyStore.loading" />
   <div class="space-y-5 sm:space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -7,6 +8,17 @@
         Quản Lý License Keys
       </h1>
       <div class="flex flex-wrap gap-3">
+        <!-- Sync Button -->
+        <button
+          @click="handleSyncLicenseKeys"
+          class="bg-gradient-to-r from-purple-600 to-pink-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Đồng Bộ Keys
+        </button>
+
         <!-- License Management Buttons -->
         <button
           @click="showUpgradeModal = true"
@@ -50,22 +62,45 @@
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
         <p class="text-2xl font-bold text-blue-600">{{ stats.total }}</p>
         <p class="text-sm text-blue-700">Tổng Keys</p>
       </div>
       <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-        <p class="text-2xl font-bold text-green-600">{{ stats.active }}</p>
-        <p class="text-sm text-green-700">Đang Hoạt Động</p>
-      </div>
-      <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
-        <p class="text-2xl font-bold text-red-600">{{ stats.inactive }}</p>
-        <p class="text-sm text-red-700">Không Hoạt Động</p>
+        <p class="text-2xl font-bold text-green-600">{{ stats.available }}</p>
+        <p class="text-sm text-green-700">Còn Khả Dụng</p>
       </div>
       <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center">
-        <p class="text-2xl font-bold text-purple-600">{{ totalUsed }}</p>
+        <p class="text-2xl font-bold text-purple-600">{{ stats.used }}</p>
         <p class="text-sm text-purple-700">Đã Sử Dụng</p>
+      </div>
+    </div>
+
+    <!-- Stats by Duration -->
+    <div v-if="stats.byDuration && stats.byDuration.length > 0" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Thống Kê Theo Thời Hạn</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div 
+          v-for="item in stats.byDuration" 
+          :key="item.duration"
+          class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600"
+        >
+          <div class="text-center">
+            <p class="text-lg font-bold text-gray-800 dark:text-white">{{ item.duration }}</p>
+            <div class="mt-2 space-y-1 text-sm">
+              <p class="text-gray-600 dark:text-gray-300">
+                Tổng: <strong>{{ item.total }}</strong>
+              </p>
+              <p class="text-green-600 dark:text-green-400">
+                Khả dụng: <strong>{{ item.available }}</strong>
+              </p>
+              <p class="text-purple-600 dark:text-purple-400">
+                Đã dùng: <strong>{{ item.used }}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -77,22 +112,30 @@
             <input
               v-model="searchForm.query"
               type="text"
-              placeholder="Tìm kiếm license key, ID..."
+              placeholder="Tìm kiếm license key..."
               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select v-model="searchForm.status" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+          <select v-model="searchForm.isActive" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
             <option value="">Tất cả trạng thái</option>
             <option value="true">Đang hoạt động</option>
             <option value="false">Không hoạt động</option>
           </select>
           <select v-model="searchForm.duration" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
             <option value="">Tất cả thời hạn</option>
+            <option value="1d">1 ngày</option>
             <option value="7d">7 ngày</option>
             <option value="30d">30 ngày</option>
             <option value="90d">90 ngày</option>
             <option value="180d">180 ngày</option>
             <option value="365d">365 ngày</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <select v-model="searchForm.isUsed" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option value="">Tất cả tình trạng</option>
+            <option value="false">Chưa sử dụng</option>
+            <option value="true">Đã sử dụng</option>
           </select>
         </div>
         <div class="flex justify-center gap-3">
@@ -129,7 +172,7 @@
     <!-- License Keys Table -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
       <LicenseKeyTable
-        :license-keys="paginatedLicenseKeys"
+        :license-keys="licenseKeys"
         @edit="openEditModal"
         @delete="confirmDelete"
       />
@@ -145,7 +188,6 @@
       @limit-change="handleLimitChange"
     />
 
-    <!-- Modals -->
     <!-- License Management Modals -->
     <ActivateLicenseModal
       v-if="showActivateModal"
@@ -169,7 +211,6 @@
     <GenerateLicenseKeysModal
       v-if="showGenerateModal"
       @close="showGenerateModal = false"
-      @generated="handleLicenseKeysGenerated"
     />
 
     <EditLicenseKeyModal
@@ -182,9 +223,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { delay } from '@/mocks/license.mock'
+import { ref, computed, onMounted } from 'vue'
 import Pagination from '@/components/common/Pagination.vue'
+import LoadingBase from '@/components/common/LoadingBase.vue'
 import LicenseKeyTable from '@/components/licenses/LicenseKeyTable.vue'
 import CreateLicenseKeyModal from '@/components/licenses/CreateLicenseKeyModal.vue'
 import GenerateLicenseKeysModal from '@/components/licenses/GenerateLicenseKeysModal.vue'
@@ -200,9 +241,7 @@ const licenseKeyStore = useLicenseKeyStore()
 // Computed properties from store
 const stats = computed(() => licenseKeyStore.stats)
 const licenseKeys = computed(() => licenseKeyStore.licenseKeys)
-watch(licenseKeys, (newVal) => {
-  console.log(newVal)
-})
+const pagination = computed(() => licenseKeyStore.pagination)
 const isSearching = ref(false)
 
 // Modal states
@@ -215,150 +254,102 @@ const selectedLicenseKey = ref<ILicenseKey | null>(null)
 // Search and filters
 const searchForm = ref({
   query: '',
-  status: '',
+  isActive: '',
+  isUsed: '',
   duration: ''
 })
 
-const appliedFilters = ref({
-  query: '',
-  status: '',
-  duration: ''
-})
-
-// Initialize appliedFilters
-appliedFilters.value = {
-  query: '',
-  status: '',
-  duration: ''
-}
-
-// Pagination
+// Pagination state
 const currentPage = ref(1)
 const currentLimit = ref(10)
 
-// Computed properties
-const totalUsed = computed(() => {
-  // Since API doesn't provide usedCount, we show 0 for now
-  return 0
-})
-
-const filteredLicenseKeys = computed(() => {
-  // Check if licenseKeys is loaded
-  if (!licenseKeys.value || !Array.isArray(licenseKeys.value)) {
-    return []
-  }
-
-  let filtered = [...licenseKeys.value]
-
-  // Apply search
-  if (appliedFilters.value.query.trim()) {
-    const query = appliedFilters.value.query.toLowerCase()
-    filtered = filtered.filter(key =>
-      key?.key?.toLowerCase().includes(query) ||
-      key?.id?.toLowerCase().includes(query)
-    )
-  }
-
-  // Apply status filter
-  if (appliedFilters.value.status !== '') {
-    const isActive = appliedFilters.value.status === 'true'
-    filtered = filtered.filter(key => key?.isActive === isActive)
-  }
-
-  // Apply duration filter
-  if (appliedFilters.value.duration) {
-    filtered = filtered.filter(key => key?.duration === appliedFilters.value.duration)
-  }
-
-  return filtered
-})
-
-// Get paginated items for current page
-const paginatedLicenseKeys = computed(() => {
-  const start = (currentPage.value - 1) * currentLimit.value
-  const end = start + currentLimit.value
-  return filteredLicenseKeys.value.slice(start, end)
-})
-
-const pagination = computed(() => {
-  const total = filteredLicenseKeys.value.length
-  const totalPages = Math.ceil(total / currentLimit.value)
-  return {
-    page: currentPage.value,
-    limit: currentLimit.value,
-    total,
-    totalPages
-  }
-})
-
 // Methods
 const loadLicenseKeys = async () => {
-  await licenseKeyStore.getLicenseKeys()
+  const params: {
+    page: number
+    limit: number
+    duration?: string
+    isUsed?: boolean
+    isActive?: boolean
+  } = {
+    page: currentPage.value,
+    limit: currentLimit.value,
+  }
 
+  // Add filters if present
+  if (searchForm.value.duration) {
+    params.duration = searchForm.value.duration
+  }
+  if (searchForm.value.isUsed !== '') {
+    params.isUsed = searchForm.value.isUsed === 'true'
+  }
+  if (searchForm.value.isActive !== '') {
+    params.isActive = searchForm.value.isActive === 'true'
+  }
+
+  await licenseKeyStore.getLicenseKeys(params)
+}
+
+const loadStats = async () => {
+  await licenseKeyStore.getLicenseKeyStats()
+}
+
+const handleSyncLicenseKeys = async () => {
+  try {
+    const result = await licenseKeyStore.syncLicenseKeys()
+    if (result) {
+      alert(`Đồng bộ thành công!\nTạo mới: ${result.synced}\nCập nhật: ${result.updated}\nBỏ qua: ${result.skipped}`)
+    }
+  } catch {
+    alert('Có lỗi xảy ra khi đồng bộ license keys')
+  }
 }
 
 const handleSearch = async () => {
   isSearching.value = true
   currentPage.value = 1 // Reset to first page when searching
-
-  // Apply search form to filters
-  appliedFilters.value = {
-    query: searchForm.value.query,
-    status: searchForm.value.status,
-    duration: searchForm.value.duration
-  }
-
-  try {
-    await delay(300) // Simulate search delay
-  } finally {
-    isSearching.value = false
-  }
+  await loadLicenseKeys()
+  isSearching.value = false
 }
 
 const handleReset = async () => {
   searchForm.value.query = ''
-  searchForm.value.status = ''
+  searchForm.value.isActive = ''
+  searchForm.value.isUsed = ''
   searchForm.value.duration = ''
-
-  appliedFilters.value = {
-    query: '',
-    status: '',
-    duration: ''
-  }
-
   currentPage.value = 1
-  await handleSearch()
+  await loadLicenseKeys()
 }
 
-const handlePageChange = (page: number) => {
+const handlePageChange = async (page: number) => {
   currentPage.value = page
+  await loadLicenseKeys()
 }
 
-const handleLimitChange = (limit: number) => {
+const handleLimitChange = async (limit: number) => {
   currentLimit.value = limit
   currentPage.value = 1 // Reset to first page when limit changes
+  await loadLicenseKeys()
 }
 
 // License Management Handlers
 const handleLicenseActivated = () => {
   showActivateModal.value = false
-  // Reload license keys to reflect any changes
   loadLicenseKeys()
+  loadStats()
 }
 
 const handleLicenseUpgraded = () => {
   showUpgradeModal.value = false
-  // Reload license keys to reflect any changes
   loadLicenseKeys()
+  loadStats()
 }
 
 // License Key Management Handlers
 const handleLicenseKeyCreated = () => {
   showCreateModal.value = false
-}
-
-const handleLicenseKeysGenerated = () => {
-  showGenerateModal.value = false
+  loadLicenseKeys()
+  loadStats()
 }
 
 const openEditModal = (licenseKey: ILicenseKey) => {
@@ -371,6 +362,8 @@ const closeEditModal = () => {
 
 const handleLicenseKeyUpdated = () => {
   closeEditModal()
+  loadLicenseKeys()
+  loadStats()
 }
 
 const confirmDelete = async (licenseKey: ILicenseKey) => {
@@ -378,6 +371,7 @@ const confirmDelete = async (licenseKey: ILicenseKey) => {
     try {
       await licenseKeyStore.deleteLicenseKey(licenseKey.id)
       console.log('Deleted license key:', licenseKey.key)
+      await loadStats()
     } catch (error) {
       console.error('Failed to delete license key:', error)
       alert('Có lỗi xảy ra khi xóa license key!')
@@ -387,8 +381,9 @@ const confirmDelete = async (licenseKey: ILicenseKey) => {
 
 // Lifecycle
 onMounted(async () => {
-  await loadLicenseKeys()
-  // Apply initial search (no filters)
-  await handleSearch()
+  await Promise.all([
+    loadLicenseKeys(),
+    loadStats(),
+  ])
 })
 </script>
