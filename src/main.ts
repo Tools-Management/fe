@@ -20,19 +20,20 @@ import ToastService from 'primevue/toastservice'
 // Import PrimeVue theme and icons
 import 'primeicons/primeicons.css'
 
-const pinia = createPinia()
-const app = createApp(App)
-
-// Setup PrimeVue and ToastService
-app.use(PrimeVue)
-app.use(ToastService)
-
-app.use(pinia)
-app.use(VueApexCharts)
-
-const authStore = useAuthStore()
-await authStore.getMe()
-
-app.use(router)
-
-app.mount('#app')
+(async () => {
+    const pinia = createPinia()
+    const app = createApp(App)
+  
+    // Setup PrimeVue and ToastService
+    app.use(PrimeVue)
+    app.use(ToastService)
+  
+    app.use(pinia)
+    app.use(VueApexCharts)
+  
+    const authStore = useAuthStore()
+    await authStore.getMe()
+  
+    app.use(router)
+    app.mount('#app')
+  })()
