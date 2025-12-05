@@ -175,11 +175,9 @@ import {
   UserCircleIcon,
   ChevronDownIcon,
   HorizontalDots,
-  TableIcon,
   ListIcon,
   PlugInIcon,
 } from '../../icons'
-import BoxCubeIcon from '@/icons/BoxCubeIcon.vue'
 import { useSidebar } from '@/composables/useSidebar'
 import { useAuthStore } from '@/store/auth'
 import { USER_ROLES } from '@/constants'
@@ -195,9 +193,24 @@ const menuGroups = computed<MenuGroup[]>(() => {
     {
       title: 'Menu',
       items: [
-        { icon: GridIcon, name: 'Dashboard', path: '/administrators' },
-        { icon: UserCircleIcon, name: 'User Profile', path: '/profile' },
-        { icon: PlugInIcon, name: 'Tools', path: '/tools' },
+        { icon: GridIcon, name: 'Tổng quan', path: '/administrators' },
+        {
+          icon: PlugInIcon,
+          name: 'Phần mềm',
+          subItems: [
+            { name: 'Phần mềm', path: '/tools', pro: false },
+            { name: 'Mua phần mềm', path: '/purchase-license', pro: false },
+          ],
+        },
+        {
+          name: 'Tài khoản',
+          icon: UserCircleIcon,
+          subItems: [
+            { name: 'Quản lý tài khoản', path: '/account', pro: false },
+            { name: 'Lịch sử giao dịch', path: '/transaction-history', pro: false },
+            { name: 'Keys đã mua', path: '/my-keys', pro: false },
+          ],
+        },
 
         {
           icon: PlugInIcon,
@@ -206,19 +219,9 @@ const menuGroups = computed<MenuGroup[]>(() => {
           subItems: [
             { name: 'Quản lý tickets', path: '/administrators/tickets', pro: false },
             { name: 'Quản lý tools', path: '/administrators/tools-management', pro: false },
-            { name: 'Quản lý key', path: '/administrators/keys', pro: false },
             { name: 'License Keys', path: '/administrators/license-keys', pro: false },
             { name: 'Phân quyền', path: '/administrators/permissions', pro: false },
             { name: 'Quản lý users', path: '/administrators/users', pro: false },
-          ],
-        },
-
-        {
-          name: 'Tài khoản',
-          icon: UserCircleIcon,
-          subItems: [
-            { name: 'Quản lý tài khoản', path: '/account', pro: false },
-            { name: 'Lịch sử giao dịch', path: '/transaction-history', pro: false },
           ],
         },
 
@@ -229,21 +232,6 @@ const menuGroups = computed<MenuGroup[]>(() => {
             { name: 'Ticket Support', path: '/ticket-support', pro: false },
             { name: 'Open Ticket', path: '/ticket-support/create', pro: false },
           ],
-        },
-        {
-          name: 'Tables',
-          icon: TableIcon,
-          subItems: [{ name: 'Basic Tables', path: '/basic-tables', pro: false }],
-        },
-      ],
-    },
-    {
-      title: 'Others',
-      items: [
-        {
-          icon: BoxCubeIcon,
-          name: 'Ui Elements',
-          subItems: [{ name: 'Alerts', path: '/alerts', pro: false }],
         },
       ],
     },

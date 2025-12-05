@@ -105,6 +105,7 @@ const form = ref({
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     form.value = { ...newUser }
   } else {
     form.value = { email: '', name: '', role: 'ROLE_USER', status: 'active' }
@@ -116,6 +117,7 @@ const saveUser = () => {
   
   if (props.user) {
     // Cập nhật
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const index = users.findIndex((u: any) => u.id === props.user.id)
     if (index !== -1) {
       users[index] = { ...users[index], ...form.value }

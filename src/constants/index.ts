@@ -1,4 +1,5 @@
 export * from './routes'
+export * from './pricing'
 
 export const USER_ROLES = {
   ROLE_ADMIN: 'ROLE_ADMIN',

@@ -50,13 +50,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 
 const props = defineProps<{
   role: string
 }>()
 
-const emit = defineEmits(['close'])
+defineEmits(['close'])
 
 const modules = [
   { id: 'dashboard', name: 'Dashboard', route: '/dashboard', icon: '📊' },
@@ -79,6 +78,7 @@ const getRoleLabel = (role: string) => {
 }
 
 const hasPermission = (moduleId: string, action: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rolePermissions = (window as any).rolePermissions
   return rolePermissions?.[props.role]?.[moduleId]?.[action] || false
 }

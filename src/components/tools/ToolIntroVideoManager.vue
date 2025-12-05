@@ -14,13 +14,22 @@
             <button
               v-if="currentLink"
               @click="copyLink"
-              class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition flex items-center gap-2 text-sm font-medium"
+              :class="[
+                'px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium',
+                copied 
+                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              ]"
+              :title="copied ? 'Đã sao chép!' : 'Sao chép link'"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              Copy
+              <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              {{ copied ? 'Copied' : 'Copy' }}
             </button>
             <a
               v-if="currentLink"
@@ -51,6 +60,7 @@
   </template>
   
   <script setup lang="ts">
+  import { ref } from 'vue'
   import ComponentCard from '@/components/common/ComponentCard.vue'
   import { useLinkStore } from '@/store/link.store'
   
@@ -62,7 +72,17 @@
     (e: 'edit'): void
   }>()
   
-  const copyLink = () => {
-    navigator.clipboard.writeText(useLinkStore().toolIntroVideoLink)
+  const copied = ref(false)
+  
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(useLinkStore().toolIntroVideoLink)
+      copied.value = true
+      setTimeout(() => {
+        copied.value = false
+      }, 500)
+    } catch (error) {
+      console.error('Failed to copy:', error)
+    }
   }
   </script>

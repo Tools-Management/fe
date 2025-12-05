@@ -1,4 +1,5 @@
-<template>
+<!-- eslint-disable vue/multi-word-component-names -->
+ <template>
   <div class="min-h-screen bg-white text-gray-800">
     <!-- Header -->
     <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-6 shadow-lg">

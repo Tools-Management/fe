@@ -6,8 +6,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 
 const series = ref([
@@ -91,7 +91,8 @@ const chartOptions = ref({
       show: false,
     },
     y: {
-      formatter: function (val) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: function (val: any) {
         return val.toString()
       },
     },

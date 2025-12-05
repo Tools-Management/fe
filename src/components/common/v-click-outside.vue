@@ -1,17 +1,26 @@
-<script>
-import { onMounted, onUnmounted } from 'vue'
+<script lang="ts">
+import type { Directive, DirectiveBinding } from 'vue'
 
-export default {
-  created(el, binding) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
+interface ClickOutsideElement extends HTMLElement {
+  clickOutsideEvent?: (event: MouseEvent) => void
+}
+
+const vClickOutside: Directive = {
+  mounted(el: ClickOutsideElement, binding: DirectiveBinding) {
+    el.clickOutsideEvent = (event: MouseEvent) => {
+      const target = event.target as Node
+      if (!(el === target || el.contains(target))) {
         binding.value(event)
       }
     }
     document.addEventListener('click', el.clickOutsideEvent)
   },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
+  unmounted(el: ClickOutsideElement) {
+    if (el.clickOutsideEvent) {
+      document.removeEventListener('click', el.clickOutsideEvent)
+    }
   },
 }
+
+export default vClickOutside
 </script>

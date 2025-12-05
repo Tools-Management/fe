@@ -1,4 +1,5 @@
-<template>
+<!-- eslint-disable vue/multi-word-component-names -->
+ <template>
   <header class="relative z-20 backdrop-blur-md bg-white/5 border-b border-white/10">
     <nav class="w-full mx-auto px-4 md:px-6 py-4 flex justify-around items-center">
       <!-- Logo -->

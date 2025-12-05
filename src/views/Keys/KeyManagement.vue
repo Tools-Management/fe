@@ -46,14 +46,17 @@ const handleKeyCreated = () => {
   // Tự động reload table (KeyTable sẽ tự load lại từ localStorage)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const openEdit = (key: any) => {
   // Có thể mở modal chỉnh sửa
   alert(`Chỉnh sửa key: ${key.key}`)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const confirmDelete = (key: any) => {
   if (confirm(`Xóa key ${key.key}?`)) {
     const keys = JSON.parse(localStorage.getItem('api_keys') || '[]')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filtered = keys.filter((k: any) => k.id !== key.id)
     localStorage.setItem('api_keys', JSON.stringify(filtered))
     alert('Đã xóa key!')

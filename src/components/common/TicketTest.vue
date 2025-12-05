@@ -144,6 +144,7 @@ import { useToast } from '@/composables/useToast'
 const ticketStore = useTicketStore()
 const { toastSuccess, toastError } = useToast()
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createdTicket = ref<any>(null)
 
 const testForm = reactive({
@@ -157,7 +158,7 @@ const testGetMyTickets = async () => {
   try {
     await ticketStore.getMyTickets()
     toastSuccess(`Loaded ${ticketStore.tickets.length} tickets`)
-  } catch (error) {
+  } catch {
     toastError('Failed to load tickets')
   }
 }
@@ -184,7 +185,7 @@ const testCreateTicket = async () => {
     })
 
     toastSuccess('Ticket created successfully!')
-  } catch (error) {
+  } catch {
     toastError('Failed to create ticket')
   }
 }
