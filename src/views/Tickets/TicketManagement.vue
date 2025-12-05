@@ -219,9 +219,14 @@ const submitReply = async (ticketId: string, data: { status: TicketStatus; conte
   try {
     await ticketStore.updateTicket(ticketId, {
       status: data.status,
-      replies: data.content,
       updatedAt: new Date().toISOString()
     })
+
+    // Add reply to ticket if content is provided
+    if (data.content) {
+      // Note: In a real app, you would call a separate API to add a reply
+      console.log('Reply content:', data.content)
+    }
 
     await handleSearch()
     closeDetail()

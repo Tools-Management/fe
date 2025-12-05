@@ -1,6 +1,13 @@
 // src/types/ticket.ts
 export type TicketStatus = 'pending' | 'processing' | 'resolved' | 'closed'
 
+export interface TicketReply {
+  id: string
+  content: string
+  isAdmin: boolean
+  createdAt: string
+}
+
 export interface Ticket {
   id: string
   ticketId: string
@@ -12,7 +19,7 @@ export interface Ticket {
   status: TicketStatus
   createdAt: string
   updatedAt: string
-  replies: string | null;
+  replies: TicketReply[]
 }
 
 export interface ITicketCreationAttributes {

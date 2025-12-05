@@ -39,10 +39,12 @@ export interface IGenerateLicenseKeysRequest {
 
 // License types (matches API ILicenseResponse)
 export interface ILicense {
+  id: string
   email: string
   machineId: string
   licenseKey: string
   isActive: boolean
+  status: 'active' | 'inactive' | 'expired'
   expiresAt: string // ISO date-time
   activatedAt: string // ISO date-time
   lastValidatedAt: string // ISO date-time
