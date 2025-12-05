@@ -91,7 +91,8 @@ const chartOptions = ref({
       show: false,
     },
     y: {
-      formatter: function (val) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: function (val: any) {
         return val.toString()
       },
     },
