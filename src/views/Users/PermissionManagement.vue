@@ -26,7 +26,6 @@
           Chọn vai trò để phân quyền
         </label>
         <div class="flex flex-wrap gap-3">
-          <!-- eslint-disable-next-line vue/no-side-effects-in-computed-properties -->
           <button
             v-for="role in roles"
             :key="role.value" 
@@ -66,12 +65,28 @@ import PageBreadcrumb from '@/components/common/PageBreadcrumb.vue'
 import ComponentCard from '@/components/common/ComponentCard.vue'
 import PermissionTable from '@/components/permissions/PermissionTable.vue'
 
+type RoleType = 'ROLE_STAFF_1' | 'ROLE_STAFF_2'
+
+interface Permission {
+  view: boolean
+  create: boolean
+  edit: boolean
+  delete: boolean
+}
+
+type PermissionsMap = Record<string, Permission>
+
+interface RoleOption {
+  value: RoleType
+  label: string
+}
+
 const currentPageTitle = ref('Phân Quyền')
-const selectedRole = ref<'ROLE_STAFF_1' | 'ROLE_STAFF_2'>('ROLE_STAFF_1')
+const selectedRole = ref<RoleType>('ROLE_STAFF_1')
 const isSaving = ref(false)
 const saveSuccess = ref(false)
 
-const roles = [
+const roles: RoleOption[] = [
   { value: 'ROLE_STAFF_1', label: 'Staff 1' },
   { value: 'ROLE_STAFF_2', label: 'Staff 2' }
 ]
@@ -86,7 +101,7 @@ const savePermissions = async () => {
 }
 
 // Dữ liệu quyền
-const permissions = ref({
+const permissions = ref<Record<RoleType, PermissionsMap>>({
   ROLE_STAFF_1: {
     '/dashboard': { view: true, create: false, edit: false, delete: false },
     '/keys': { view: true, create: true, edit: true, delete: false },

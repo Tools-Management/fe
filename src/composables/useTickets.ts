@@ -5,18 +5,20 @@ import type { Ticket, TicketStatus, TicketFilters } from '@/types/ticket'
 const mockTickets: Ticket[] = [
   {
     id: 'TKT-A1B2C3',
+    ticketId: 'TKT-A1B2C3',
     title: 'Không thể remake video từ TikTok',
     content: 'Khi ấn nút remake thì báo lỗi 500, đã thử nhiều lần...',
     department: 'technical',
     order: 'remake-PRO-2025',
     phone: '0901234567',
-    status: 'new',
+    status: 'pending',
     createdAt: '2025-11-04T10:30:00Z',
     updatedAt: '2025-11-04T10:30:00Z',
     replies: []
   },
   {
     id: 'TKT-X9Y8Z7',
+    ticketId: 'TKT-X9Y8Z7',
     title: 'Hóa đơn không hiển thị đúng',
     content: 'Đã thanh toán nhưng hóa đơn vẫn ghi chưa thanh toán...',
     department: 'billing',
@@ -76,7 +78,7 @@ export function useTickets() {
         createdAt: new Date().toISOString()
       })
       ticket.updatedAt = new Date().toISOString()
-      if (ticket.status === 'new') ticket.status = 'processing'
+      if (ticket.status === 'pending') ticket.status = 'processing'
     }
   }
 
