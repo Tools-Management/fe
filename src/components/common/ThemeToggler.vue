@@ -37,5 +37,9 @@
 <script setup lang="ts">
 import { useTheme } from '../layout/ThemeProvider.vue'
 
-const { toggleTheme } = useTheme()
+const { toggleTheme: toggleThemeFn } = useTheme() as { toggleTheme: () => void }
+
+const toggleTheme = () => {
+  toggleThemeFn()
+}
 </script>
