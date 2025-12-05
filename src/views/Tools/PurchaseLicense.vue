@@ -88,8 +88,7 @@
           </div>
 
           <!-- Savings Badge -->
-           <!-- eslint-disable-next-line vue/no-side-effects-in-computed-properties -->
-          <div v-if="plan.savings" class="absolute top-0 left-0 bg-green-500 text-white px-3 py-1 text-xs font-bold rounded-br-lg">
+          <div v-if="'savings' in plan && plan.savings" class="absolute top-0 left-0 bg-green-500 text-white px-3 py-1 text-xs font-bold rounded-br-lg">
             Tiết kiệm {{ plan.savings }}
           </div>
 
@@ -215,8 +214,8 @@ const handlePurchase = async () => {
     } else {
       alert('Có lỗi xảy ra khi mua license key. Vui lòng thử lại!')
     }
-  } catch {
-    console.error('Purchase error')
+  } catch (error) {
+    console.error('Purchase error:', error)
     alert('Có lỗi xảy ra khi mua license key. Vui lòng thử lại!')
   } finally {
     isPurchasing.value = false

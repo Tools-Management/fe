@@ -84,50 +84,67 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
+interface User {
+  id: string
+  email: string
+  name: string
+  role: string
+  status: string
+}
+
 const props = defineProps<{
-  user: {
-    id: string
-    email: string
-    name: string
-    role: string
-    status: string
-  }
+  user?: User | null
 }>()
 
-const emit = defineEmits(['close', 'saved'])
+const emit = defineEmits<{
+  close: []
+  saved: []
+}>()
 
-const form = ref({
+interface FormData {
+  email: string
+  name: string
+  role: string
+  status: string
+}
+
+const form = ref<FormData>({
   email: '',
   name: '',
-  role: 'ROLE_USER' as const,
-  status: 'active' as const
+  role: 'ROLE_USER',
+  status: 'active'
 })
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    form.value = { ...newUser }
+    form.value = {
+      email: newUser.email,
+      name: newUser.name,
+      role: newUser.role,
+      status: newUser.status
+    }
   } else {
     form.value = { email: '', name: '', role: 'ROLE_USER', status: 'active' }
   }
 }, { immediate: true })
 
 const saveUser = () => {
-  const users = JSON.parse(localStorage.getItem('app_users') || '[]')
+  const users = JSON.parse(localStorage.getItem('app_users') || '[]') as User[]
   
   if (props.user) {
     // Cập nhật
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const index = users.findIndex((u: any) => u.id === props.user.id)
+    const index = users.findIndex((u: User) => u.id === props.user?.id)
     if (index !== -1) {
       users[index] = { ...users[index], ...form.value }
     }
   } else {
     // Tạo mới
-    const newUser = {
+    const newUser: User = {
       id: Date.now().toString(),
-      ...form.value,
-      createdAt: new Date().toISOString()
+      email: form.value.email,
+      name: form.value.name,
+      role: form.value.role,
+      status: form.value.status,
     }
     users.unshift(newUser)
   }

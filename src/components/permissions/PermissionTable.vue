@@ -91,13 +91,26 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 
+type RoleType = 'ROLE_STAFF_1' | 'ROLE_STAFF_2'
+
+interface Permission {
+  view: boolean
+  create: boolean
+  edit: boolean
+  delete: boolean
+}
+
+type PermissionsMap = Record<string, Permission>
+
 const props = defineProps<{
-  role: 'ROLE_STAFF_1' | 'ROLE_STAFF_2'
+  role: RoleType
 }>()
 
-const emit = defineEmits(['update'])
+const emit = defineEmits<{
+  update: []
+}>()
 
-const permissions = {
+const permissions: Record<RoleType, PermissionsMap> = {
   ROLE_STAFF_1: {
     '/dashboard': { view: true, create: false, edit: false, delete: false },
     '/keys': { view: true, create: true, edit: true, delete: false },
@@ -134,6 +147,10 @@ const formatPath = (path: string) => {
     '/tickets': 'Ticket'
   }
   return names[path] || path
+}
+
+const emitUpdate = () => {
+  emit('update')
 }
 
 watch(() => props.role, () => {
