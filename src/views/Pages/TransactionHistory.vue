@@ -102,10 +102,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TransactionTable from '@/components/billing/TransactionTable.vue'
 import Pagination from '@/components/common/Pagination.vue'
-import DatePicker from '@/components/common/DatePicker.vue'
 import { useBillingStore } from '@/store/billing.store'
 import type { TopupQuery } from '@/types/wallet'
 
@@ -131,9 +130,6 @@ const appliedFilters = ref<TopupQuery>({
   paymentMethod: ''
 })
 
-// Pagination
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
 const isSearching = ref(false)
 
 // Computed
@@ -152,8 +148,6 @@ const filteredTransactions = computed(() => {
 
   return filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 })
-
-const totalPages = computed(() => billingStore.topupHistory?.pagination.totalPages || 0)
 
 const paginatedTransactions = computed(() => {
   // Use data directly from store since API already handles pagination

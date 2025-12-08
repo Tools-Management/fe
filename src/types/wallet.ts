@@ -27,6 +27,7 @@ export interface WalletTopup {
   vnpPayDate?: string
   vnpOrderInfo?: string
   transactionCode?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   paymentDetails?: Record<string, any>
   completedAt?: string
   failedAt?: string
