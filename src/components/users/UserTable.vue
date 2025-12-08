@@ -66,8 +66,6 @@ onMounted(() => {
 })
 
 const users = computed(() => userStore.users);
-console.log(users.value)
-
 const getStatusClass = (status: boolean) => {
   return {
     'bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-500': status,
