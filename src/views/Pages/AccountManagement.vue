@@ -35,7 +35,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-green-100 text-sm font-medium">Số dư hiện tại</p>
-            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance.current) }}</p>
+            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance?.balance || 0) }}</p>
           </div>
           <div class="p-3 bg-white/20 rounded-full">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-blue-100 text-sm font-medium">Tổng đã chi tiêu</p>
-            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance.totalSpent) }}</p>
+            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance?.balance || 0) }}</p>
             <p class="text-blue-100 text-xs mt-1">Tháng này</p>
           </div>
           <div class="p-3 bg-white/20 rounded-full">
@@ -66,7 +66,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-yellow-100 text-sm font-medium">Đang xử lý</p>
-            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance.pending) }}</p>
+            <p class="text-3xl font-bold mt-1">{{ formatCurrency(topups?.filter(topup => topup.status === 'pending').reduce((acc, topup) => acc + topup.amount, 0) || 0) }}</p>
             <p class="text-yellow-100 text-xs mt-1">Chờ xác nhận</p>
           </div>
           <div class="p-3 bg-white/20 rounded-full">
@@ -184,14 +184,14 @@ import TransactionTable from '@/components/billing/TransactionTable.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import DatePicker from '@/components/common/DatePicker.vue'
 import { useBillingStore } from '@/store/billing.store'
-import type { TopUpResponse, TransactionFilters } from '@/types/billing'
+import type { TransactionFilters } from '@/types/billing'
 
 // Store
 const billingStore = useBillingStore()
 
 // Computed properties from store
 const balance = computed(() => billingStore.balance)
-const transactions = computed(() => billingStore.transactions)
+const topups = computed(() => billingStore.topups)
 
 // Modal and form states
 const showTopUpModal = ref(false)
@@ -231,7 +231,7 @@ const isSearching = ref(false)
 
 // Computed for filtering and pagination
 const filteredTransactions = computed(() => {
-  let filtered = [...transactions.value]
+  let filtered = [...topups.value]
 
   // Filter by status
   if (appliedFilters.value.status) {
@@ -269,10 +269,9 @@ const formatCurrency = (amount: number) => {
   }).format(amount)
 }
 
-const handleTopUpSuccess = (data: TopUpResponse) => {
+const handleTopUpSuccess = () => {
   showTopUpModal.value = false
   // Handle successful top-up
-  console.log('Top-up success:', data)
 }
 
 const handleSearch = async () => {
@@ -322,8 +321,8 @@ const handleLimitChange = (limit: number) => {
 
 // Lifecycle
 onMounted(async () => {
-  await billingStore.loadBalance()
-  await billingStore.loadTransactions()
+  await billingStore.getBalance()
+  await billingStore.getTopupHistory()
   // Apply initial search (no filters)
   await handleSearch()
 })

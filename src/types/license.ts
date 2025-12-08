@@ -88,6 +88,14 @@ export interface IPurchaseLicenseKeyRequest {
   duration: string
 }
 
+// Purchase response
+export interface IPurchaseLicenseKeyResponse {
+  key: string
+  duration: string
+  price: number
+  purchasedAt: string
+}
+
 // Sync response
 export interface ISyncLicenseKeysResponse {
   synced: number

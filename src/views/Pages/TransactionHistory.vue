@@ -19,19 +19,18 @@
     <!-- Filters Form -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
       <form @submit.prevent="handleSearch" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="flex-1 min-w-48">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Loại giao dịch
+              Phương thức thanh toán
             </label>
             <select
-              v-model="searchForm.type"
+              v-model="searchForm.paymentMethod"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-300"
             >
               <option value="">Tất cả</option>
-              <option value="deposit">Nạp tiền</option>
-              <option value="withdrawal">Rút tiền</option>
-              <option value="payment">Thanh toán</option>
+              <option value="vnpay">VNPay</option>
+              <option value="atm">ATM/Internet Banking</option>
             </select>
           </div>
 
@@ -44,31 +43,13 @@
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-300"
             >
               <option value="">Tất cả</option>
-              <option value="completed">Hoàn thành</option>
               <option value="pending">Đang xử lý</option>
+              <option value="completed">Hoàn thành</option>
               <option value="failed">Thất bại</option>
+              <option value="cancelled">Đã hủy</option>
             </select>
           </div>
 
-          <div class="flex-1 min-w-48">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Từ ngày
-            </label>
-            <DatePicker
-              v-model="searchForm.startDate"
-              placeholder="Chọn ngày bắt đầu"
-            />
-          </div>
-
-          <div class="flex-1 min-w-48">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Đến ngày
-            </label>
-            <DatePicker
-              v-model="searchForm.endDate"
-              placeholder="Chọn ngày kết thúc"
-            />
-          </div>
 
           <div class="flex items-end gap-2">
             <button
@@ -109,11 +90,11 @@
 
     <!-- Pagination -->
     <Pagination
-      v-if="filteredTransactions"
-      :current-page="currentPage"
-      :total-pages="totalPages"
-      :total-items="filteredTransactions.length"
-      :limit="itemsPerPage"
+      v-if="topupHistory?.pagination"
+      :current-page="topupHistory.pagination.page"
+      :total-pages="topupHistory.pagination.totalPages"
+      :total-items="topupHistory.pagination.total"
+      :limit="topupHistory.pagination.limit"
       @page-change="handlePageChange"
       @limit-change="handleLimitChange"
     />
@@ -126,27 +107,28 @@ import TransactionTable from '@/components/billing/TransactionTable.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import DatePicker from '@/components/common/DatePicker.vue'
 import { useBillingStore } from '@/store/billing.store'
-import type { TransactionFilters } from '@/types/billing'
+import type { TopupQuery } from '@/types/wallet'
 
 // Store
 const billingStore = useBillingStore()
 
 // Computed properties from store
-const transactions = computed(() => billingStore.transactions)
+const topupHistory = computed(() => billingStore.topupHistory)
+const topups = computed(() => billingStore.topupHistory?.topups || [])
 
 // Form and filters
-const searchForm = ref<TransactionFilters>({
-  type: '',
+const searchForm = ref<TopupQuery>({
+  page: 1,
+  limit: 10,
   status: '',
-  startDate: '',
-  endDate: ''
+  paymentMethod: ''
 })
 
-const appliedFilters = ref<TransactionFilters>({
-  type: '',
+const appliedFilters = ref<TopupQuery>({
+  page: 1,
+  limit: 10,
   status: '',
-  startDate: '',
-  endDate: ''
+  paymentMethod: ''
 })
 
 // Pagination
@@ -156,45 +138,32 @@ const isSearching = ref(false)
 
 // Computed
 const filteredTransactions = computed(() => {
-  let filtered = [...transactions.value]
-
-  // Filter by type
-  if (appliedFilters.value.type) {
-    filtered = filtered.filter(t => t.type === appliedFilters.value.type)
-  }
+  let filtered = [...topups.value]
 
   // Filter by status
   if (appliedFilters.value.status) {
     filtered = filtered.filter(t => t.status === appliedFilters.value.status)
   }
 
-  // Filter by date range
-  if (appliedFilters.value.startDate) {
-    const startDate = new Date(appliedFilters.value.startDate)
-    filtered = filtered.filter(t => new Date(t.createdAt) >= startDate)
-  }
-
-  if (appliedFilters.value.endDate) {
-    const endDate = new Date(appliedFilters.value.endDate)
-    endDate.setHours(23, 59, 59, 999) // End of day
-    filtered = filtered.filter(t => new Date(t.createdAt) <= endDate)
+  // Filter by payment method
+  if (appliedFilters.value.paymentMethod) {
+    filtered = filtered.filter(t => t.paymentMethod === appliedFilters.value.paymentMethod)
   }
 
   return filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 })
 
-const totalPages = computed(() => Math.ceil(filteredTransactions.value.length / itemsPerPage.value))
+const totalPages = computed(() => billingStore.topupHistory?.pagination.totalPages || 0)
 
 const paginatedTransactions = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  return filteredTransactions.value.slice(start, end)
+  // Use data directly from store since API already handles pagination
+  return topups.value
 })
 
 const totalTransactions = computed(() => filteredTransactions.value.length)
 
 const totalAmount = computed(() => {
-  return filteredTransactions.value
+  return topups.value
     .filter(t => t.status === 'completed')
     .reduce((sum, t) => sum + t.amount, 0)
 })
@@ -209,67 +178,57 @@ const formatCurrency = (amount: number) => {
 
 const handleSearch = async () => {
   isSearching.value = true
-  currentPage.value = 1 // Reset to first page when searching
 
   // Apply search form to filters
   appliedFilters.value = {
-    type: searchForm.value.type,
+    page: 1,
+    limit: searchForm.value.limit || 10,
     status: searchForm.value.status,
-    startDate: searchForm.value.startDate,
-    endDate: searchForm.value.endDate
+    paymentMethod: searchForm.value.paymentMethod
   }
 
-  // Simulate search delay
-  await new Promise(resolve => setTimeout(resolve, 500))
+  // Call API to get filtered results
+  await billingStore.getTopupHistory(
+    appliedFilters.value.page,
+    appliedFilters.value.limit
+  )
+
   isSearching.value = false
 }
 
 const handleReset = async () => {
   searchForm.value = {
-    type: '',
+    page: 1,
+    limit: 10,
     status: '',
-    startDate: '',
-    endDate: ''
+    paymentMethod: ''
   }
 
   appliedFilters.value = {
-    type: '',
+    page: 1,
+    limit: 10,
     status: '',
-    startDate: '',
-    endDate: ''
+    paymentMethod: ''
   }
 
-  currentPage.value = 1
   await handleSearch()
 }
 
-const handlePageChange = (page: number) => {
-  currentPage.value = page
+const handlePageChange = async (page: number) => {
+  searchForm.value.page = page
+  await billingStore.getTopupHistory(page, searchForm.value.limit || 10)
 }
 
-const handleLimitChange = (limit: number) => {
-  itemsPerPage.value = limit
-  currentPage.value = 1
+const handleLimitChange = async (limit: number) => {
+  searchForm.value.limit = limit
+  searchForm.value.page = 1
+  await billingStore.getTopupHistory(1, limit)
 }
 
-// Watch for date validation
-watch(() => searchForm.value.startDate, (newStartDate) => {
-  if (newStartDate && searchForm.value.endDate && newStartDate > searchForm.value.endDate) {
-    searchForm.value.endDate = newStartDate
-  }
-})
-
-watch(() => searchForm.value.endDate, (newEndDate) => {
-  if (newEndDate && searchForm.value.startDate && newEndDate < searchForm.value.startDate) {
-    searchForm.value.startDate = newEndDate
-  }
-})
 
 // Lifecycle
 onMounted(async () => {
-  await billingStore.loadBalance()
-  await billingStore.loadTransactions()
-  // Apply initial search (no filters)
-  await handleSearch()
+  await billingStore.getBalance()
+  await billingStore.getTopupHistory()
 })
 </script>

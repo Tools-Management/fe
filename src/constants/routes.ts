@@ -63,4 +63,12 @@ export const API_ROUTES = {
     DELETE_EXTERNAL: '/api-management/license-keys/:id',
     GENERATE: '/api-management/license-keys/generate/batch',
   },
+  WALLET: {
+    BASE: '/wallet',
+    BALANCE: '/wallet/balance',
+    CREATE_TOPUP: '/wallet/topup',
+    TOPUPS: '/wallet/topups',
+    TOPUP_DETAIL: '/wallet/topups/:topupCode',
+    VNPAY_RETURN: '/wallet/vnpay/return',
+  },
 }

@@ -35,11 +35,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
-                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Nạp tiền</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ getPaymentMethodName(transaction.paymentMethod) }}</span>
               </div>
             </td>
             <td class="px-5 py-4 sm:px-6">
-              <p class="text-gray-500 text-theme-sm dark:text-gray-400">{{ transaction.description }}</p>
+              <p class="text-gray-500 text-theme-sm dark:text-gray-400">{{ transaction.topupCode }}</p>
+              <p v-if="transaction.notes" class="text-xs text-gray-400 dark:text-gray-500">{{ transaction.notes }}</p>
             </td>
             <td class="px-5 py-4 sm:px-6">
               <span class="text-sm font-semibold text-green-600">
@@ -56,11 +57,11 @@
                     'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
                       transaction.status === 'pending',
                     'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
-                      transaction.status === 'failed',
+                      transaction.status === 'failed' || transaction.status === 'cancelled' || transaction.status === 'refunded',
                   },
                 ]"
               >
-                {{ transaction.status === 'completed' ? 'Hoàn thành' : transaction.status === 'pending' ? 'Đang xử lý' : 'Thất bại' }}
+                {{ getStatusLabel(transaction.status) }}
               </span>
             </td>
             <td class="px-5 py-4 sm:px-6">
@@ -74,11 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Transaction } from '@/types/billing'
+import type { WalletTopup } from '@/types/wallet'
 
 // Props
 defineProps<{
-  transactions: Transaction[]
+  transactions: WalletTopup[]
 }>()
 
 // Methods
@@ -98,5 +99,27 @@ const formatDate = (dateString: string) => {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+
+const getPaymentMethodName = (method: string) => {
+  const methodNames: Record<string, string> = {
+    'vnpay': 'VNPay',
+    'atm': 'ATM/Internet Banking',
+    'momo': 'MoMo',
+    'zalopay': 'ZaloPay'
+  }
+  return methodNames[method] || method.toUpperCase()
+}
+
+const getStatusLabel = (status: string) => {
+  const statusLabels: Record<string, string> = {
+    'pending': 'Đang xử lý',
+    'processing': 'Đang xử lý',
+    'completed': 'Hoàn thành',
+    'cancelled': 'Đã hủy',
+    'refunded': 'Đã hoàn tiền',
+    'failed': 'Thất bại'
+  }
+  return statusLabels[status] || status
 }
 </script>

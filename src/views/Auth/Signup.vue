@@ -60,8 +60,18 @@
                         id="fname"
                         name="fname"
                         placeholder="Enter your first name"
-                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        :class="[
+                          'h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
+                          firstNameError
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                        ]"
+                        @blur="validateFirstName"
+                        @input="firstNameError = ''"
                       />
+                      <p v-if="firstNameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {{ firstNameError }}
+                      </p>
                     </div>
                     <!-- Last Name -->
                     <div class="sm:col-span-1">
@@ -77,8 +87,18 @@
                         id="lname"
                         name="lname"
                         placeholder="Enter your last name"
-                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        :class="[
+                          'h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
+                          lastNameError
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                        ]"
+                        @blur="validateLastName"
+                        @input="lastNameError = ''"
                       />
+                      <p v-if="lastNameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {{ lastNameError }}
+                      </p>
                     </div>
                   </div>
                   <!-- Email -->
@@ -95,8 +115,18 @@
                       id="email"
                       name="email"
                       placeholder="Enter your email"
-                      class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                      :class="[
+                        'h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
+                        emailError
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                          : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                      ]"
+                      @blur="validateEmail"
+                      @input="emailError = ''"
                     />
+                    <p v-if="emailError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                      {{ emailError }}
+                    </p>
                   </div>
                   <!-- Password -->
                   <div>
@@ -112,11 +142,19 @@
                         :type="showPassword ? 'text' : 'password'"
                         id="password"
                         placeholder="Enter your password"
-                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        :class="[
+                          'h-11 w-full rounded-lg border bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
+                          passwordError
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                        ]"
+                        @blur="validatePassword"
+                        @input="passwordError = ''"
                       />
                       <span
                         @click="togglePasswordVisibility"
-                        class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-400"
+                        class="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                        :class="passwordError ? 'text-red-400' : 'text-gray-500 dark:text-gray-400'"
                       >
                         <svg
                           v-if="!showPassword"
@@ -152,13 +190,17 @@
                         </svg>
                       </span>
                     </div>
+                    <p v-if="passwordError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                      {{ passwordError }}
+                    </p>
                   </div>
                   <!-- Checkbox -->
                   <div>
-                    <div>
+                    <div :class="termsError ? 'border border-red-300 rounded-lg p-3' : ''">
                       <label
                         for="checkboxLabelOne"
-                        class="flex items-start text-sm font-normal text-gray-700 cursor-pointer select-none dark:text-gray-400"
+                        class="flex items-start text-sm font-normal cursor-pointer select-none"
+                        :class="termsError ? 'text-red-700 dark:text-red-400' : 'text-gray-700 dark:text-gray-400'"
                       >
                         <div class="relative">
                           <input
@@ -166,12 +208,15 @@
                             type="checkbox"
                             id="checkboxLabelOne"
                             class="sr-only"
+                            @change="validateTerms"
                           />
                           <div
                             :class="
                               agreeToTerms
                                 ? 'border-brand-500 bg-brand-500'
-                                : 'bg-transparent border-gray-300 dark:border-gray-700'
+                                : termsError
+                                  ? 'border-red-500 bg-transparent'
+                                  : 'bg-transparent border-gray-300 dark:border-gray-700'
                             "
                             class="mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]"
                           >
@@ -203,15 +248,29 @@
                           <span class="text-gray-800 dark:text-white"> Privacy Policy </span>
                         </p>
                       </label>
+                      <p v-if="termsError" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                        {{ termsError }}
+                      </p>
                     </div>
                   </div>
+                  <!-- General Error -->
+                  <div v-if="generalError" class="p-3 bg-red-50 border border-red-200 rounded-lg dark:bg-red-900/20 dark:border-red-800">
+                    <p class="text-sm text-red-600 dark:text-red-400">{{ generalError }}</p>
+                  </div>
+
                   <!-- Button -->
                   <div>
                     <button
                       type="submit"
-                      class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                      :disabled="isLoading"
+                      class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg shadow-theme-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                      :class="isLoading ? 'bg-gray-400' : 'bg-brand-500 hover:bg-brand-600'"
                     >
-                      Sign Up
+                      <svg v-if="isLoading" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ isLoading ? 'Đang đăng ký...' : 'Sign Up' }}
                     </button>
                   </div>
                 </div>
@@ -271,6 +330,9 @@ import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import bgSignin from '@/assets/images/bg-signin.jpg'
+import { useAuthStore } from '@/store/auth'
+import type { RegisterRequest } from '@/types/user'
+const authStore = useAuthStore()
 
 const firstName = ref('')
 const lastName = ref('')
@@ -278,19 +340,130 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const agreeToTerms = ref(false)
+const isLoading = ref(false)
+
+// Validation errors
+const firstNameError = ref('')
+const lastNameError = ref('')
+const emailError = ref('')
+const passwordError = ref('')
+const termsError = ref('')
+const generalError = ref('')
+
+// Validation methods
+const validateFirstName = () => {
+  if (!firstName.value.trim()) {
+    firstNameError.value = 'Tên là bắt buộc'
+    return false
+  } else if (firstName.value.trim().length < 2) {
+    firstNameError.value = 'Tên phải có ít nhất 2 ký tự'
+    return false
+  } else {
+    firstNameError.value = ''
+    return true
+  }
+}
+
+const validateLastName = () => {
+  if (!lastName.value.trim()) {
+    lastNameError.value = 'Họ là bắt buộc'
+    return false
+  } else if (lastName.value.trim().length < 2) {
+    lastNameError.value = 'Họ phải có ít nhất 2 ký tự'
+    return false
+  } else {
+    lastNameError.value = ''
+    return true
+  }
+}
+
+const validateEmail = () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!email.value.trim()) {
+    emailError.value = 'Email là bắt buộc'
+    return false
+  } else if (!emailRegex.test(email.value)) {
+    emailError.value = 'Email không hợp lệ'
+    return false
+  } else {
+    emailError.value = ''
+    return true
+  }
+}
+
+const validatePassword = () => {
+  if (!password.value.trim()) {
+    passwordError.value = 'Mật khẩu là bắt buộc'
+    return false
+  } else if (password.value.length < 6) {
+    passwordError.value = 'Mật khẩu phải có ít nhất 6 ký tự'
+    return false
+  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password.value)) {
+    passwordError.value = 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
+    return false
+  } else {
+    passwordError.value = ''
+    return true
+  }
+}
+
+const validateTerms = () => {
+  if (!agreeToTerms.value) {
+    termsError.value = 'Bạn phải đồng ý với điều khoản và điều kiện'
+    return false
+  } else {
+    termsError.value = ''
+    return true
+  }
+}
+
+const validateForm = () => {
+  const isFirstNameValid = validateFirstName()
+  const isLastNameValid = validateLastName()
+  const isEmailValid = validateEmail()
+  const isPasswordValid = validatePassword()
+  const isTermsValid = validateTerms()
+
+  return isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isTermsValid
+}
+
+const clearErrors = () => {
+  firstNameError.value = ''
+  lastNameError.value = ''
+  emailError.value = ''
+  passwordError.value = ''
+  termsError.value = ''
+  generalError.value = ''
+}
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
-const handleSubmit = () => {
-  // Implement form submission logic here
-  console.log('Form submitted', {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    agreeToTerms: agreeToTerms.value,
-  })
+const handleSubmit = async () => {
+  clearErrors()
+
+  if (!validateForm()) return
+
+  isLoading.value = true
+  generalError.value = ''
+
+  try {
+    const registerData: RegisterRequest = {
+      username: `${firstName.value.trim()}${lastName.value.trim()}`,
+      email: email.value.trim(),
+      password: password.value,
+    }
+
+    await authStore.register(registerData)
+
+    // If successful, authStore will handle navigation to verify-otp
+
+  } catch (error: unknown) {
+    generalError.value = error instanceof Error ? error.message : 'Đăng ký thất bại. Vui lòng thử lại.'
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
+

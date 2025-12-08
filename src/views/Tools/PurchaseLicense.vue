@@ -25,11 +25,32 @@
             <span class="text-gray-700 font-medium">Gói đã chọn:</span>
             <span class="text-xl font-bold text-gray-900">{{ pricingPlans.find(p => p.duration === selectedDuration)?.label }}</span>
           </div>
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center mb-4">
             <span class="text-gray-700 font-medium">Tổng thanh toán:</span>
             <span class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               {{ pricingPlans.find(p => p.duration === selectedDuration)?.priceDisplay }}
             </span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-700 font-medium">Số dư ví hiện tại:</span>
+            <span :class="[
+              'text-lg font-bold',
+              balance >= (pricingPlans.find(p => p.duration === selectedDuration)?.price || 0)
+                ? 'text-green-600'
+                : 'text-red-600'
+            ]">
+              {{ formatCurrency(balance) }}
+            </span>
+          </div>
+          <!-- Balance warning -->
+          <div v-if="balance < (pricingPlans.find(p => p.duration === selectedDuration)?.price || 0)"
+               class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <span class="text-sm text-red-800 font-medium">Số dư ví không đủ để mua gói này!</span>
+            </div>
           </div>
         </div>
 
@@ -53,14 +74,20 @@
         <!-- Purchase Button -->
         <button
           @click="handlePurchase"
-          :disabled="isPurchasing"
-          class="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 disabled:hover:scale-100 flex items-center justify-center gap-2"
+          :disabled="!canPurchase || isPurchasing"
+          :class="[
+            'w-full py-4 px-6 font-bold rounded-xl shadow-lg transform transition-all duration-200 flex items-center justify-center gap-2',
+            canPurchase && !isPurchasing
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-105 text-white'
+              : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+          ]"
         >
           <svg v-if="isPurchasing" class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <span v-if="isPurchasing">Đang xử lý...</span>
+          <span v-else-if="!canPurchase">Không đủ số dư ví</span>
           <span v-else>
             <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -158,12 +185,17 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useLicenseKeyStore } from '@/store/license_key.store'
+import { useBillingStore } from '@/store/billing.store'
 import { LICENSE_PRICING } from '@/constants'
 import PurchaseSuccessModal from '@/components/licenses/PurchaseSuccessModal.vue'
 
 // Store
 const licenseKeyStore = useLicenseKeyStore()
+
+// Router
+const router = useRouter()
 
 // State
 const selectedDuration = ref<string | null>(null)
@@ -171,14 +203,31 @@ const isPurchasing = ref(false)
 const showSuccessModal = ref(false)
 const purchasedKey = ref('')
 
+// Stores
+const billingStore = useBillingStore()
+
 // Computed
 const stats = computed(() => licenseKeyStore.stats)
+const balance = computed(() => billingStore.balance?.balance || 0)
 
 const pricingPlans = computed(() => {
   return Object.values(LICENSE_PRICING)
 })
 
+const canPurchase = computed(() => {
+  if (!selectedDuration.value) return false
+  const selectedPlan = pricingPlans.value.find(p => p.duration === selectedDuration.value)
+  return selectedPlan && balance.value >= selectedPlan.price
+})
+
 // Methods
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amount)
+}
+
 const getAvailableKeys = (duration: string): number => {
   if (!stats.value?.byDuration) return 0
   const durationStats = stats.value.byDuration.find(d => d.duration === duration)
@@ -196,9 +245,6 @@ const handlePurchase = async () => {
   isPurchasing.value = true
 
   try {
-    // Giả lập thanh toán (trong thực tế sẽ tích hợp payment gateway)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-
     // Gọi API purchase
     const result = await licenseKeyStore.purchaseLicenseKey({
       duration: selectedDuration.value
@@ -214,9 +260,24 @@ const handlePurchase = async () => {
     } else {
       alert('Có lỗi xảy ra khi mua license key. Vui lòng thử lại!')
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Purchase error:', error)
-    alert('Có lỗi xảy ra khi mua license key. Vui lòng thử lại!')
+
+    // Handle specific error messages
+    const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra khi mua license key. Vui lòng thử lại!'
+
+    if (errorMessage.includes('Số dư ví không đủ')) {
+      const confirmed = confirm('Số dư ví không đủ để mua license key này. Bạn có muốn nạp tiền vào ví không?')
+      if (confirmed) {
+        router.push('/wallet')
+      }
+    } else if (errorMessage.includes('No available license key')) {
+      alert('Hiện tại không còn license key cho gói này. Vui lòng thử lại sau!')
+    } else if (errorMessage.includes('Gói license không hợp lệ')) {
+      alert('Gói license không hợp lệ. Vui lòng chọn lại!')
+    } else {
+      alert(errorMessage)
+    }
   } finally {
     isPurchasing.value = false
   }
@@ -229,7 +290,10 @@ const closeSuccessModal = () => {
 
 // Lifecycle
 onMounted(async () => {
-  await licenseKeyStore.getLicenseKeyStats()
+  await Promise.all([
+    licenseKeyStore.getLicenseKeyStats(),
+    billingStore.getBalance()
+  ])
 })
 </script>
 

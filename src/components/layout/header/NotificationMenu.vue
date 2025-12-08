@@ -211,7 +211,6 @@ const unlockAudio = async () => {
     isAudioUnlocked.value = true
     showUnlockHint.value = false
     localStorage.setItem('notification_sound_unlocked', 'true')
-    console.log('Âm thanh đã được unlock!')
   } catch (err) {
     console.warn('Không thể unlock âm thanh:', err)
   }
