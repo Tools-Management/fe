@@ -152,12 +152,12 @@
                         />
                         Keep me logged in
                       </label>
-                      <router-link
+                      <!-- <router-link
                         to="/reset-password"
                         class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                       >
                         Forgot password?
-                      </router-link>
+                      </router-link> -->
                     </div>
 
                     <!-- General Error -->
@@ -171,7 +171,7 @@
                     <!-- Verify Account Button -->
                     <div v-if="isAccountNotActivated" class="mt-4">
                       <router-link
-                        :to="{ path: '/verify-otp', query: { email: email.trim() } }"
+                        :to="{ path: '/verify-otp', query: { email: email.trim(), check: 'signin' } }"
                         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-green-500 rounded-lg shadow-sm hover:bg-green-600 transition-colors"
                       >
                         Xác thực tài khoản
@@ -347,6 +347,11 @@ const handleSubmit = async () => {
       password: password.value,
     })
     if (result) {
+      if(result.includes('Account is not activated. Please verify your email first.')) {
+        isAccountNotActivated.value = true
+        generalError.value = "Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email và xác thực tài khoản."
+        return
+      }
       generalError.value = "Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại."
       return
     }

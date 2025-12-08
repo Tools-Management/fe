@@ -198,6 +198,7 @@ const authStore = useAuthStore()
 
 // Reactive data
 const email = ref((route.query.email as string) || '')
+const check = ref((route.query.check as string) || '')
 const otpDigits = ref(['', '', '', '', '', ''])
 const otpRefs = ref<HTMLInputElement[]>([])
 const isLoading = ref(false)
@@ -284,8 +285,12 @@ const handleSubmit = async () => {
       otp: otpCode.value,
     }
 
-    await authStore.verifyOtp(verifyData)
+    const result = await authStore.verifyOtp(verifyData)
 
+    if (result) {
+      generalError.value = result
+      return
+    }
     // If successful, authStore will handle navigation
   } catch (error: unknown) {
     generalError.value =
@@ -326,10 +331,13 @@ const handleResendOtp = async () => {
 }
 
 // Focus first input on mount
-onMounted(() => {
+onMounted(async () => {
   nextTick(() => {
     otpRefs.value[0]?.focus()
   })
+  if(check.value === 'signin') {
+    await handleResendOtp()
+  }
 })
 </script>
 
