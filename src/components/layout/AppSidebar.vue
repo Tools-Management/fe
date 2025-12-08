@@ -221,7 +221,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
             { name: 'Quản lý tickets', path: '/administrators/tickets', pro: false },
             { name: 'Quản lý tools', path: '/administrators/tools-management', pro: false },
             { name: 'License Keys', path: '/administrators/license-keys', pro: false },
-            { name: 'Phân quyền', path: '/administrators/permissions', pro: false },
+            // { name: 'Phân quyền', path: '/administrators/permissions', pro: false },
             { name: 'Quản lý users', path: '/administrators/users', pro: false },
           ],
         },
