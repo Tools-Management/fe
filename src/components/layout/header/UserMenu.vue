@@ -83,13 +83,10 @@ const dropdownRef = ref<HTMLElement | null>(null)
 const authStore = useAuthStore()
 
 const user = computed(() => authStore.user)
-const isAdmin = computed(() => authStore.isAdmin)
 
 const isHome = computed(() => route.path === '/')
 
-const adminItems = [{ href: '/administrators', icon: SendIcon, text: 'Quản trị' }]
-
-const menuItems = computed(() => (isAdmin.value ? [...adminItems] : []))
+const menuItems = [{ href: '/administrators', icon: SendIcon, text: 'Quản trị' }]
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
