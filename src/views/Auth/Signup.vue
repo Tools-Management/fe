@@ -455,12 +455,21 @@ const handleSubmit = async () => {
       password: password.value,
     }
 
-    await authStore.register(registerData)
-
+    const result = await authStore.register(registerData)
+    
+    if (result) {
+      generalError.value = result
+      return
+    }
     // If successful, authStore will handle navigation to verify-otp
 
   } catch (error: unknown) {
-    generalError.value = error instanceof Error ? error.message : 'Đăng ký thất bại. Vui lòng thử lại.'
+    const err = error as { message?: string }
+    if (err.message && err.message.includes('already exists')) {
+      generalError.value = 'Email này đã được sử dụng. Vui lòng sử dụng email khác hoặc đăng nhập nếu bạn đã có tài khoản.'
+    } else {
+      generalError.value = err.message || 'Đăng ký thất bại. Vui lòng thử lại.'
+    }
   } finally {
     isLoading.value = false
   }

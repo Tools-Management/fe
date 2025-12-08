@@ -198,7 +198,7 @@ const authStore = useAuthStore()
 
 // Reactive data
 const email = ref((route.query.email as string) || '')
-const otpDigits = ref(['', '', '', '', ''])
+const otpDigits = ref(['', '', '', '', '', ''])
 const otpRefs = ref<HTMLInputElement[]>([])
 const isLoading = ref(false)
 const isResending = ref(false)

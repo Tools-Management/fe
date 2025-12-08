@@ -16,11 +16,11 @@ interface AuthState {
 }
 
 interface AuthActions {
-  login: (credentials: LoginRequest) => Promise<void>
+  login: (credentials: LoginRequest) => Promise<string | undefined>
   getMe: () => Promise<void>
-  register: (data: RegisterRequest) => Promise<void>
+  register: (data: RegisterRequest) => Promise<string | undefined>
   logout: () => Promise<void>
-  verifyOtp: (data: VerifyOtpRequest) => Promise<void>
+  verifyOtp: (data: VerifyOtpRequest) => Promise<string | undefined>
   resendOtp: (data: ResendOtpRequest) => Promise<void>
   //   refreshToken: (token: string) => Promise<void>
   //   forgotPassword: (email: string) => Promise<void>
@@ -57,19 +57,20 @@ export const useAuthStore = defineStore<
   },
 
   actions: {
-    async login(credentials: LoginRequest) {
+    async login(credentials: LoginRequest): Promise<string | undefined> {
       this.loading = true
       this.error = ''
 
       try {
         const result = await authService.login(credentials)
+        
 
         if (result instanceof ResponseError) {
           this.error = result.message
-          return
+          return this.error
         }
 
-        const { user, tokens } = result.data
+        const { user, tokens } = result.data  
 
         this.user = user
         this.accessToken = tokens.accessToken
@@ -80,6 +81,7 @@ export const useAuthStore = defineStore<
           user.role === USER_ROLES.ROLE_ADMIN || user.role === USER_ROLES.ROLE_SUPER_ADMIN
 
         router.push(isAdmin ? '/administrators' : '/')
+        return undefined
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
           return
@@ -111,7 +113,7 @@ export const useAuthStore = defineStore<
       }
     },
 
-    async register(data: RegisterRequest) {
+    async register(data: RegisterRequest): Promise<string | undefined> {
       this.loading = true
       this.error = ''
 
@@ -119,8 +121,7 @@ export const useAuthStore = defineStore<
         const result = await authService.register(data)
 
         if (result instanceof ResponseError) {
-          this.error = result.message
-          return
+          return result.message
         }
 
         // Registration successful, redirect to OTP verification
@@ -128,6 +129,7 @@ export const useAuthStore = defineStore<
           path: '/verify-otp',
           query: { email: data.email }
         })
+        return undefined
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
           return
@@ -137,7 +139,7 @@ export const useAuthStore = defineStore<
       }
     },
 
-    async verifyOtp(data: VerifyOtpRequest) {
+    async verifyOtp(data: VerifyOtpRequest): Promise<string | undefined> {
       this.loading = true
       this.error = ''
 
@@ -145,12 +147,12 @@ export const useAuthStore = defineStore<
         const result = await authService.verifyOtp(data)
 
         if (result instanceof ResponseError) {
-          this.error = result.message
-          return
+          return result.message
         }
 
         // OTP verification successful, redirect to login
         router.push('/signin?verified=true')
+        return undefined
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
           return
@@ -168,12 +170,9 @@ export const useAuthStore = defineStore<
         const result = await authService.resendOtp(data)
 
         if (result instanceof ResponseError) {
-          this.error = result.message
-          return
+          throw new Error(result.message)
         }
 
-        // OTP resent successfully
-        console.log('OTP resent successfully')
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
           return

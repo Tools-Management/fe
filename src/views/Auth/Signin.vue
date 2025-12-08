@@ -168,6 +168,16 @@
                       <p class="text-sm text-red-600 dark:text-red-400">{{ generalError }}</p>
                     </div>
 
+                    <!-- Verify Account Button -->
+                    <div v-if="isAccountNotActivated" class="mt-4">
+                      <router-link
+                        :to="{ path: '/verify-otp', query: { email: email.trim() } }"
+                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-green-500 rounded-lg shadow-sm hover:bg-green-600 transition-colors"
+                      >
+                        Xác thực tài khoản
+                      </router-link>
+                    </div>
+
                     <!-- Submit button -->
                     <div>
                       <button
@@ -263,6 +273,7 @@ const password = ref('')
 const showPassword = ref(false)
 const keepLoggedIn = ref(false)
 const isLoading = ref(false)
+const isAccountNotActivated = ref(false)
 
 // Validation
 const emailError = ref('')
@@ -318,6 +329,7 @@ const clearErrors = () => {
   emailError.value = ''
   passwordError.value = ''
   generalError.value = ''
+  isAccountNotActivated.value = false
 }
 
 const handleSubmit = async () => {
@@ -327,17 +339,29 @@ const handleSubmit = async () => {
 
   isLoading.value = true
   generalError.value = ''
+  isAccountNotActivated.value = false
 
   try {
-    await authStore.login({
+    const result = await authStore.login({
       email: email.value.trim(),
       password: password.value,
     })
+    if (result) {
+      generalError.value = "Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại."
+      return
+    }
 
     // If login successful, authStore will handle navigation
   } catch (error: unknown) {
-    const err = error as { message?: string }
-    generalError.value = err.message || 'Đăng nhập thất bại. Vui lòng thử lại.'
+    const err = error as { message?: string; status?: number }
+    if (err.status === 403 || (err.message && err.message.includes('not activated'))) {
+      isAccountNotActivated.value = true
+      generalError.value = 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email và xác thực tài khoản.'
+    } else if (err.message && err.message.includes('Invalid email or password')) {
+      generalError.value = 'Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại.'
+    } else {
+      generalError.value = err.message || 'Đăng nhập thất bại. Vui lòng thử lại.'
+    }
   } finally {
     isLoading.value = false
   }
