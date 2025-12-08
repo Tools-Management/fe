@@ -1,6 +1,6 @@
 <!-- src/components/billing/TopUpModal.vue -->
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -17,14 +17,6 @@
 
       <!-- Content -->
       <div class="p-6 space-y-6">
-        <!-- Current Balance -->
-        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-green-700 dark:text-green-300">Số dư hiện tại</span>
-            <span class="text-lg font-bold text-green-800 dark:text-green-200">{{ formatCurrency(balance.current) }}</span>
-          </div>
-        </div>
-
         <!-- Amount Selection -->
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -147,12 +139,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useBillingStore } from '@/store/billing.store'
-import type { TopUpResponse, PaymentMethod } from '@/types/billing'
 
 // Props & Emits
 const emit = defineEmits<{
   close: []
-  success: [data: TopUpResponse]
+  success: [paymentUrl: string, topupCode: string]
 }>()
 
 // Store
@@ -164,32 +155,23 @@ const customAmount = ref('')
 const selectedMethod = ref('')
 const isProcessing = ref(false)
 
-// Computed
-const balance = computed(() => billingStore.balance)
-
 const presetAmounts = [50000, 100000, 200000, 500000]
+
+interface PaymentMethod {
+  id: string
+  name: string
+  description: string
+  color: string
+  icon: string
+}
 
 const paymentMethods: PaymentMethod[] = [
   {
-    id: 'zalopay',
-    name: 'ZaloPay',
-    description: 'Thanh toán nhanh qua ZaloPay',
+    id: 'vnpay',
+    name: 'VNPay',
+    description: 'Thanh toán qua VNPay',
     color: 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400',
-    icon: 'ZaloPayIcon'
-  },
-  {
-    id: 'momo',
-    name: 'MoMo',
-    description: 'Ví điện tử MoMo',
-    color: 'bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400',
-    icon: 'MomoIcon'
-  },
-  {
-    id: 'payos',
-    name: 'PayOS',
-    description: 'Thanh toán đa dạng',
-    color: 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400',
-    icon: 'PayOSIcon'
+    icon: 'VNPayIcon'
   },
   {
     id: 'atm',
@@ -197,13 +179,6 @@ const paymentMethods: PaymentMethod[] = [
     description: 'Chuyển khoản ngân hàng',
     color: 'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400',
     icon: 'BankIcon'
-  },
-  {
-    id: 'qr',
-    name: 'QR Code',
-    description: 'Quét mã QR để thanh toán',
-    color: 'bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400',
-    icon: 'QRIcon'
   }
 ]
 
@@ -234,33 +209,20 @@ const handleProceedToPayment = async () => {
   isProcessing.value = true
 
   try {
-    // Mock API call to create payment order
-    const response = await billingStore.createTopUpOrder({
+    // Create topup request
+    const paymentUrl = await billingStore.createTopup({
       amount: selectedAmount.value,
-      method: selectedMethod.value
+      paymentMethod: selectedMethod.value === 'atm' ? 'vnpay' : selectedMethod.value,
+      notes: `Nạp tiền qua ${paymentMethods.find(m => m.id === selectedMethod.value)?.name}`
     })
 
-    if (response.success) {
-      // Redirect to payment gateway (mock)
-      console.log('Redirecting to payment URL:', response.payUrl)
+    if (paymentUrl) {
+      // Emit success with payment URL and topup code
+      const topupCode = billingStore.topupHistory?.topups[0]?.topupCode || ''
+      emit('success', paymentUrl, topupCode)
 
-      // For demo purposes, we'll simulate success
-      setTimeout(() => {
-        billingStore.addTransaction({
-          id: Date.now().toString(),
-          type: 'deposit',
-          amount: selectedAmount.value,
-          description: `Nạp tiền qua ${paymentMethods.find(m => m.id === selectedMethod.value)?.name}`,
-          status: 'completed',
-          createdAt: new Date().toISOString()
-        })
-
-        // Update balance
-        billingStore.updateBalance(selectedAmount.value, 'add')
-
-        isProcessing.value = false
-        emit('success', response)
-      }, 2000)
+      // Close modal
+      emit('close')
     }
   } catch (error) {
     console.error('Payment creation failed:', error)

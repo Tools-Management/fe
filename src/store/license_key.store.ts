@@ -1,13 +1,16 @@
 // src/store/license_key.store.ts
 import { licenseKeyService } from '@/services/license_key.service'
+import { useBillingStore } from '@/store/billing.store'
+import { LICENSE_PRICING } from '@/constants'
 import type { IPagination } from '@/types/ticket'
-import type { 
-  ILicenseKey, 
-  ICreateLicenseKeyRequest, 
-  IUpdateLicenseKeyRequest, 
-  IGenerateLicenseKeysRequest, 
+import type {
+  ILicenseKey,
+  ICreateLicenseKeyRequest,
+  IUpdateLicenseKeyRequest,
+  IGenerateLicenseKeysRequest,
   LicenseKeyStats,
   IPurchaseLicenseKeyRequest,
+  IPurchaseLicenseKeyResponse,
 } from '@/types/license'
 import { ResponseError } from '@/utils/error'
 import { defineStore } from 'pinia'
@@ -33,7 +36,7 @@ interface LicenseKeyActions {
   getLicenseKeyStats: () => Promise<void>
   getMyLicenseKeys: () => Promise<void>
   syncLicenseKeys: () => Promise<{ synced: number; skipped: number; updated: number } | null>
-  purchaseLicenseKey: (data: IPurchaseLicenseKeyRequest) => Promise<{ key: string; duration: string; purchasedAt: string } | null>
+  purchaseLicenseKey: (data: IPurchaseLicenseKeyRequest) => Promise<IPurchaseLicenseKeyResponse | null>
   deleteLicenseKey: (id: number) => Promise<void>
   
   // Old actions (for external API management)
@@ -153,11 +156,27 @@ export const useLicenseKeyStore = defineStore<
       }
     },
 
-    async purchaseLicenseKey(data: IPurchaseLicenseKeyRequest): Promise<{ key: string; duration: string; purchasedAt: string } | null> {
+    async purchaseLicenseKey(data: IPurchaseLicenseKeyRequest): Promise<IPurchaseLicenseKeyResponse | null> {
       this.loading = true
       this.error = ''
 
       try {
+        // Kiểm tra số dư ví trước khi gọi API
+        const billingStore = useBillingStore()
+        const pricingPlan = LICENSE_PRICING[data.duration as keyof typeof LICENSE_PRICING]
+
+        if (!pricingPlan) {
+          throw new Error('Gói license không hợp lệ')
+        }
+
+        const currentBalance = billingStore.balance?.balance || 0
+        const packagePrice = pricingPlan.price
+
+        if (currentBalance < packagePrice) {
+          throw new Error('Số dư ví không đủ để mua gói license này. Vui lòng nạp thêm tiền!')
+        }
+
+        // Nếu đủ tiền thì gọi API
         const response = await licenseKeyService.purchaseLicenseKey(data)
 
         if (response instanceof ResponseError) throw response
@@ -165,7 +184,10 @@ export const useLicenseKeyStore = defineStore<
         // Reload my license keys after purchase
         await this.getMyLicenseKeys()
 
-        return response.data as { key: string; duration: string; purchasedAt: string }
+        // Refresh wallet balance after purchase
+        await billingStore.getBalance()
+
+        return response.data
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'An unexpected error occurred.'
         throw error

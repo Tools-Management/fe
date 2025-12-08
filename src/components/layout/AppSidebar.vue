@@ -206,6 +206,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
           name: 'Tài khoản',
           icon: UserCircleIcon,
           subItems: [
+            { name: 'Ví của tôi', path: '/wallet', pro: false },
             { name: 'Quản lý tài khoản', path: '/account', pro: false },
             { name: 'Lịch sử giao dịch', path: '/transaction-history', pro: false },
             { name: 'Keys đã mua', path: '/my-keys', pro: false },

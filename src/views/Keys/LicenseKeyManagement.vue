@@ -370,7 +370,6 @@ const confirmDelete = async (licenseKey: ILicenseKey) => {
   if (confirm(`Bạn có chắc muốn xóa license key "${licenseKey.key}"?`)) {
     try {
       await licenseKeyStore.deleteLicenseKey(licenseKey.id)
-      console.log('Deleted license key:', licenseKey.key)
       await loadStats()
     } catch (error) {
       console.error('Failed to delete license key:', error)

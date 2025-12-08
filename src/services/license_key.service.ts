@@ -8,6 +8,7 @@ import type {
   IGenerateLicenseKeysRequest,
   LicenseKeyStats,
   IPurchaseLicenseKeyRequest,
+  IPurchaseLicenseKeyResponse,
   ISyncLicenseKeysResponse,
   ILicenseKeysResponse,
   IGenerateLicenseKeysResponse,
@@ -26,7 +27,7 @@ export interface ILicenseKeyService {
   getLicenseKeyStats: () => Promise<ApiResponse<LicenseKeyStats> | ResponseError>
   getMyLicenseKeys: () => Promise<ApiResponse<ILicenseKey[]> | ResponseError>
   syncLicenseKeys: () => Promise<ApiResponse<ISyncLicenseKeysResponse> | ResponseError>
-  purchaseLicenseKey: (data: IPurchaseLicenseKeyRequest) => Promise<ApiResponse<{ key: string; duration: string; purchasedAt: string }> | ResponseError>
+  purchaseLicenseKey: (data: IPurchaseLicenseKeyRequest) => Promise<ApiResponse<IPurchaseLicenseKeyResponse> | ResponseError>
   deleteLicenseKey: (id: number) => Promise<ApiResponse<void> | ResponseError>
   
   // Old endpoints for external API management
@@ -63,8 +64,8 @@ class LicenseKeyService implements ILicenseKeyService {
     return apiService(API_ROUTES.LICENSE_KEYS.SYNC).post<ISyncLicenseKeysResponse>()
   }
 
-  purchaseLicenseKey(data: IPurchaseLicenseKeyRequest): Promise<ApiResponse<{ key: string; duration: string; purchasedAt: string }> | ResponseError> {
-    return apiService(API_ROUTES.LICENSE_KEYS.PURCHASE).post<{ key: string; duration: string; purchasedAt: string }>(data)
+  purchaseLicenseKey(data: IPurchaseLicenseKeyRequest): Promise<ApiResponse<IPurchaseLicenseKeyResponse> | ResponseError> {
+    return apiService(API_ROUTES.LICENSE_KEYS.PURCHASE).post<IPurchaseLicenseKeyResponse>(data)
   }
 
   deleteLicenseKey(id: number): Promise<ApiResponse<void> | ResponseError> {

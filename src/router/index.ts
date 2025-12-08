@@ -37,6 +37,12 @@ const router = createRouter({
           meta: { title: 'Quản lý tài khoản', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
         },
         {
+          path: '/wallet',
+          name: 'WalletDashboard',
+          component: () => import('@/views/Pages/WalletDashboard.vue'),
+          meta: { title: 'Ví của tôi', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+        },
+        {
           path: '/transaction-history',
           name: 'TransactionHistory',
           component: () => import('@/views/Pages/TransactionHistory.vue'),
@@ -153,6 +159,12 @@ const router = createRouter({
       name: 'Signup',
       component: () => import('@/views/Auth/Signup.vue'),
       meta: { title: 'Sign Up' },
+    },
+    {
+      path: '/verify-otp',
+      name: 'VerifyOTP',
+      component: () => import('@/views/Auth/VerifyOTP.vue'),
+      meta: { title: 'Verify Email' },
     },
     // ====================== 404 ======================
     {
