@@ -21,15 +21,53 @@
 </template>
 
 <script setup lang="ts">
-import { Palette, Music, Scissors, Download, Youtube, Zap } from 'lucide-vue-next'
+import {
+  Palette,
+  Music,
+  Scissors,
+  Download,
+  Youtube,
+  Zap,
+  Link,
+  FileText,
+  Type,
+  Image,
+  User,
+  UploadCloud,
+} from 'lucide-vue-next'
 
 const props = defineProps<{
-  icon: 'Palette' | 'Music' | 'Scissors' | 'Download' | 'Youtube' | 'Zap'
+  icon:
+    | 'Palette'
+    | 'Music'
+    | 'Scissors'
+    | 'Download'
+    | 'Youtube'
+    | 'Zap'
+    | 'Link'
+    | 'FileText'
+    | 'Type'
+    | 'Image'
+    | 'User'
+    | 'UploadCloud'
   title: string
   desc: string
   tags: string[]
 }>()
 
-const iconMap = { Palette, Music, Scissors, Download, Youtube, Zap }
+const iconMap = {
+  Palette,
+  Music,
+  Scissors,
+  Download,
+  Youtube,
+  Zap,
+  Link,
+  FileText,
+  Type,
+  Image,
+  User,
+  UploadCloud,
+}
 const iconComponent = iconMap[props.icon]
 </script>
