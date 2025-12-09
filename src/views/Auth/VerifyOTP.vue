@@ -3,7 +3,7 @@
   <FullScreenLayout>
     <div class="relative p-6 bg-white dark:bg-gray-900 sm:p-0">
       <div
-        class="relative flex flex-col justify-center w-full h-screen lg:flex-row dark:bg-gray-900"
+        class="relative flex flex-col justify-center w-full min-h-screen lg:h-screen lg:flex-row dark:bg-gray-900"
       >
         <!-- OTP Form -->
         <div class="flex flex-col flex-1 w-full lg:w-1/2">
@@ -161,7 +161,7 @@
               <div
                 class="2xl:text-7xl text-6xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
               >
-                AIRemake<span class="text-pink-400">.tools</span>
+                AIRemake<span class="text-pink-400">Pro</span>
               </div>
               <h1 class="text-3xl md:text-4xl font-extrabold leading-tight text-white">
                 Xác Thực Email <br />

@@ -17,7 +17,7 @@
 
       
       <!-- Purchase Button -->
-      <div v-if="selectedDuration" class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+      <div id="purchase-confirmation" v-if="selectedDuration" class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
         <h3 class="text-2xl font-bold text-gray-900 mb-6">Xác Nhận Mua Hàng</h3>
         
         <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
@@ -237,6 +237,12 @@ const getAvailableKeys = (duration: string): number => {
 const selectPlan = (duration: string) => {
   if (getAvailableKeys(duration) === 0) return
   selectedDuration.value = duration
+
+  // Scroll to purchase confirmation section on mobile
+  const purchaseSection = document.getElementById('purchase-confirmation')
+  if (purchaseSection) {
+    purchaseSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }
 
 const handlePurchase = async () => {

@@ -4,16 +4,16 @@
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl p-8 text-white shadow-lg">
       <h1 class="text-3xl md:text-4xl font-bold mb-3">
-        Chào mừng đến với <span class="text-yellow-300">Nova Tools</span>
+        Chào mừng đến với <span class="text-yellow-300">AIRemakePro</span>
       </h1>
       <p class="text-lg opacity-90 mb-6 max-w-3xl">
-        Nền tảng công cụ AI hàng đầu giúp bạn tạo nội dung chuyên nghiệp với 
-        <strong>AI Remake Video</strong>, <strong>Text to Speech</strong>, và nhiều công cụ khác.
+        Nền tảng AI tiên tiến cho creator với
+        <strong>Copy link YouTube → Có ngay video mới bằng AI</strong>, <strong>Kho prompt dựng sẵn</strong>, và nhiều công cụ khác.
       </p>
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:items-center">
         <router-link to="/tools">
           <button
-            class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center gap-2"
+            class="w-full sm:w-auto bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
             <Wand2 class="w-5 h-5" />
             Khám phá Tools
@@ -21,7 +21,7 @@
         </router-link>
         <button
           @click="scrollToPricing"
-          class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+          class="w-full sm:w-auto border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition flex items-center justify-center"
         >
           Xem Bảng Giá
         </button>
@@ -52,7 +52,7 @@
     <div id="tools" class="scroll-mt-20">
       <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
         <Sparkles class="w-7 h-7 text-yellow-500" />
-        Công Cụ AI Tools
+        AIRemakePro
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="tool in tools" :key="tool.title" class="flex">
@@ -154,11 +154,11 @@
     <!-- CTA Final -->
     <div class="text-center py-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl">
       <p class="text-2xl text-white font-bold mb-4">Sẵn sàng bắt đầu?</p>
-      <p class="text-white/90 mb-6">Chọn gói phù hợp và bắt đầu sử dụng công cụ ngay hôm nay!</p>
-      <div class="flex gap-4 justify-center flex-wrap">
+      <p class="text-white/90 mb-6 mx-2">Chọn gói phù hợp và bắt đầu sử dụng công cụ ngay hôm nay!</p>
+      <div class="flex flex-col sm:flex-row gap-4 mx-12 justify-center items-center flex-wrap">
         <router-link to="/purchase-license">
           <button
-            class="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition shadow-lg flex items-center gap-3"
+            class="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-3"
           >
             <ShoppingCart class="w-6 h-6" />
             Mua License Key
@@ -166,7 +166,7 @@
         </router-link>
         <router-link to="/tools">
           <button
-            class="border-2 border-white text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white hover:text-blue-600 transition flex items-center gap-3"
+            class="w-full sm:w-auto border-2 border-white text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white hover:text-blue-600 transition flex items-center justify-center gap-3"
           >
             <Play class="w-6 h-6" />
             Dùng Thử Tools
@@ -210,40 +210,40 @@ const getAvailableKeys = (duration: string): number => {
 // Dữ liệu tools
 const tools = [
   {
-    icon: 'Palette',
-    title: 'AI Remake Style',
-    desc: 'Biến video thường thành Anime, Pixar, Cinematic, LEGO... với AI tiên tiến.',
-    tags: ['50+ styles', 'HD/4K'],
+    icon: 'Link',
+    title: 'Copy Link YouTube',
+    desc: 'Copy link YouTube → Có ngay video mới bằng AI. Phân tích và remake video chỉ với 1 link.',
+    tags: ['YouTube', 'Auto AI'],
   },
   {
-    icon: 'Music',
-    title: 'Text to Speech',
-    desc: 'Chuyển văn bản thành giọng nói tự nhiên với hơn 100+ giọng đọc đa ngôn ngữ.',
-    tags: ['100+ giọng', 'Đa ngôn ngữ'],
+    icon: 'FileText',
+    title: 'Kho Prompt Dựng Sẵn',
+    desc: 'Kho prompt dựng sẵn + Xuất video 9:16 chuẩn Shorts / TikTok / Reels.',
+    tags: ['9:16', 'Viral ready'],
   },
   {
-    icon: 'Scissors',
-    title: 'Cắt Ghép Video',
-    desc: 'Cắt đoạn, ghép video, xóa nền, tách lời thoại chỉ trong 1 click.',
-    tags: ['AI detect', 'Nhanh x10'],
+    icon: 'Type',
+    title: 'Tạo Video Từ Text Prompt',
+    desc: 'Tạo video hoàn toàn mới từ text prompt. AI hiểu ý tưởng của bạn.',
+    tags: ['Text to Video', 'AI Generate'],
   },
   {
-    icon: 'Download',
-    title: 'Xuất Video Pro',
-    desc: '1080p, 4K, thêm watermark, logo, phụ đề, tối ưu cho YouTube/TikTok.',
-    tags: ['Chất lượng cao', 'Tải ngay'],
+    icon: 'Image',
+    title: 'Remake Từ Hình Ảnh',
+    desc: 'Tạo Video Mới Tương Tự Từ Hình Ảnh Của Video Gốc.',
+    tags: ['Image to Video', 'Style transfer'],
   },
   {
-    icon: 'Youtube',
-    title: 'Phân Tích YouTube',
-    desc: 'Nhập link → AI phân tích → remake lại video theo phong cách bạn muốn.',
-    tags: ['Hỗ trợ Shorts', 'Auto'],
+    icon: 'User',
+    title: 'AI Character Creator',
+    desc: 'AI CHARACTER CREATOR – TỐI ƯU TẠO NHÂN VẬT ĐỒNG BỘ.',
+    tags: ['Character', 'Consistency'],
   },
   {
-    icon: 'Zap',
-    title: 'Xử Lý Nhanh',
-    desc: 'Ưu tiên xử lý, nhận kết quả trong vài phút với công nghệ GPU mạnh mẽ.',
-    tags: ['Ưu tiên', 'GPU x100'],
+    icon: 'UploadCloud',
+    title: 'Auto Đăng Lên MXH',
+    desc: 'Tự động đăng video lên YouTube, TikTok, Facebook ngay sau khi dựng xong.',
+    tags: ['Auto upload', 'Đa nền tảng'],
   },
 ]
 
