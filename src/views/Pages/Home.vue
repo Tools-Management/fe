@@ -10,21 +10,21 @@
           <span
             class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent"
           >
-          AIRemake Tools
+          AIRemakePro
           </span>
           <br />
           <span class="text-white">Công Cụ AI Siêu Thông Minh</span>
         </h1>
         <p class="mt-6 text-xl text-gray-300 max-w-2xl mx-auto">
-          Bộ công cụ AI đa năng cho creator: Remake Video, Text to Speech, Cắt Ghép Video, 
-          và nhiều hơn nữa. Tối ưu cho YouTube, TikTok, Facebook, Instagram.
+          Nền tảng AI tiên tiến cho creator: Copy link YouTube → Có ngay video mới bằng AI,
+          Kho prompt dựng sẵn + Xuất video 9:16 chuẩn Shorts/TikTok/Reels, và nhiều công cụ khác.
         </p>
 
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center">
           <button
             v-if="!isAuthenticated"
             @click="handleGetStarted"
-            class="bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
+            class="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -38,7 +38,7 @@
           </button>
           <router-link v-else to="/purchase-license">
             <button
-              class="bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
+              class="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition transform flex items-center justify-center gap-2"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -53,7 +53,7 @@
           </router-link>
           <button
             @click="handleViewDemo"
-            class="border border-purple-500 px-8 py-4 rounded-xl font-semibold hover:bg-purple-500/20 transition"
+            class="w-full sm:w-auto border border-purple-500 px-8 py-4 rounded-xl font-semibold hover:bg-purple-500/20 transition"
           >
             {{ isAuthenticated ? 'Vào Dashboard' : 'Xem Demo & Tính Năng' }}
           </button>
@@ -78,7 +78,7 @@
     <section class="relative z-10 container mx-auto px-6 py-20">
       <h2 class="text-4xl font-bold text-center mb-16">
         <span class="bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
-          Tại Sao Chọn AIRemake.tools?
+          Tại Sao Chọn AIRemakePro?
         </span>
       </h2>
 
@@ -177,27 +177,27 @@
           Sẵn sàng <span class="text-pink-400">tăng trưởng</span> với AI?
         </h2>
         <p class="text-xl text-gray-300 mb-10">
-          Hàng trăm creator đã tin dùng Nova AI Tools. Đến lượt bạn!
+          Hàng trăm creator đã tin dùng AIRemakePro. Đến lượt bạn!
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center">
           <button
             v-if="!isAuthenticated"
             @click="handleGetStarted"
-            class="bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
+            class="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
           >
             Đăng Ký Ngay - Miễn Phí
           </button>
           <template v-else>
             <router-link to="/purchase-license">
               <button
-                class="bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
+                class="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-700 px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition transform"
               >
                 Mua License Key Ngay
               </button>
             </router-link>
             <router-link to="/my-keys">
               <button
-                class="border-2 border-purple-500 px-10 py-5 rounded-full text-xl font-bold hover:bg-purple-500/20 transition"
+                class="w-full sm:w-auto border-2 border-purple-500 px-10 py-5 rounded-full text-xl font-bold hover:bg-purple-500/20 transition"
               >
                 Xem Keys Đã Mua
               </button>
@@ -251,29 +251,56 @@ const handleSelectPlan = () => {
 // SVG Icons as string (safe with v-html)
 const features = ref([
   {
-    title: 'AI Remake Video',
-    desc: 'Tự động remake video với 50+ phong cách: Anime, Pixar, Hollywood, LEGO... Tránh bản quyền hiệu quả.',
+    title: 'Copy Link YouTube',
+    desc: 'Copy link YouTube → Có ngay video mới bằng AI. Phân tích và remake video theo phong cách bạn muốn chỉ với 1 link.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
       </svg>
     `,
   },
   {
-    title: 'Text to Speech AI',
-    desc: 'Chuyển văn bản thành giọng nói tự nhiên với 100+ giọng đọc đa ngôn ngữ. Hoàn hảo cho video, podcast.',
+    title: 'Kho Prompt Dựng Sẵn',
+    desc: 'Kho prompt dựng sẵn + Xuất video 9:16 chuẩn Shorts / TikTok / Reels. Tạo video viral chỉ với vài click.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
       </svg>
     `,
   },
   {
-    title: 'Công Cụ Đa Năng',
-    desc: 'Cắt ghép video, xóa nền, xuất 4K, phân tích YouTube, và nhiều công cụ khác trong 1 license key.',
+    title: 'Tạo Video Từ Text Prompt',
+    desc: 'Tạo video hoàn toàn mới từ text prompt. AI hiểu ý tưởng của bạn và biến thành video chất lượng cao.',
     icon: `
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+    `,
+  },
+  {
+    title: 'Remake Từ Hình Ảnh',
+    desc: 'Tạo Video Mới Tương Tự Từ Hình Ảnh Của Video Gốc. Giữ nguyên nội dung, thay đổi phong cách hoàn toàn.',
+    icon: `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    `,
+  },
+  {
+    title: 'AI Character Creator',
+    desc: 'AI CHARACTER CREATOR – TỐI ƯU TẠO NHÂN VẬT ĐỒNG BỘ. Tạo series video với nhân vật nhất quán.',
+    icon: `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+    `,
+  },
+  {
+    title: 'Tự Động Đăng Video',
+    desc: 'Tự động đăng video lên YouTube, TikTok, Facebook ngay sau khi dựng xong. Tiết kiệm thời gian, không cần thao tác thủ công.',
+    icon: `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M16 8l-4-4m0 0L8 8m4-4v12" />
       </svg>
     `,
   },
