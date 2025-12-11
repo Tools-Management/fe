@@ -10,7 +10,7 @@
       </h1>
       <div class="flex items-center gap-4">
         <button
-          @click="showTopupModal = true"
+          @click="handleTopup"
           class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,9 +184,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { useBillingStore } from '@/store/billing.store'
 import TopUpModal from '@/components/billing/TopUpModal.vue'
+import { useToast } from '@/composables/useToast'
 
 // Store
 const billingStore = useBillingStore()
+const { toastInfo } = useToast()
 
 // Reactive data
 const showTopupModal = ref(false)
@@ -247,6 +249,11 @@ const getStatusLabel = (status: string) => {
     failed: 'Thất bại',
   }
   return statusLabels[status] || status
+}
+
+const handleTopup = () => {
+  toastInfo('Đang cập nhật lại tính năng nạp tiền tài khoản, vui lòng quay lại sau...');
+  // showTopupModal.value = true
 }
 
 const handleTopupSuccess = (paymentUrl: string) => {
