@@ -3,7 +3,9 @@
   <div class="space-y-6">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+      <h1
+        class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent"
+      >
         Ví của tôi
       </h1>
       <div class="flex items-center gap-4">
@@ -12,7 +14,12 @@
           class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
           </svg>
           Nạp tiền
         </button>
@@ -27,13 +34,13 @@
           <p class="text-3xl font-bold mt-1">
             {{ formatCurrency(balance?.balance || 0) }}
           </p>
-          <p class="text-green-100 text-sm mt-2">
-            Tiền tệ: {{ balance?.currency || 'VND' }}
-          </p>
+          <p class="text-green-100 text-sm mt-2">Tiền tệ: {{ balance?.currency || 'VND' }}</p>
         </div>
         <div class="opacity-20">
           <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
           </svg>
         </div>
       </div>
@@ -53,9 +60,22 @@
           </router-link>
         </div>
 
-        <div v-if="recentTopups.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
-          <svg class="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V9l4-4m-8 8v4a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2h2m4 0V5a2 2 0 012-2h4a2 2 0 012 2v6a2 2 0 01-2 2h-2" />
+        <div
+          v-if="recentTopups.length === 0"
+          class="text-center py-8 text-gray-500 dark:text-gray-400"
+        >
+          <svg
+            class="w-12 h-12 mx-auto mb-4 opacity-50"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V9l4-4m-8 8v4a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2h2m4 0V5a2 2 0 012-2h4a2 2 0 012 2v6a2 2 0 01-2 2h-2"
+            />
           </svg>
           <p>Chưa có giao dịch nào</p>
         </div>
@@ -68,13 +88,25 @@
           >
             <div class="flex items-center gap-3">
               <div class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full">
-                <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <svg
+                  class="w-4 h-4 text-green-600 dark:text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
                 </svg>
               </div>
               <div>
                 <p class="font-medium text-gray-900 dark:text-gray-100">{{ topup.topupCode }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(topup.createdAt) }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ formatDate(topup.createdAt) }}
+                </p>
               </div>
             </div>
             <div class="text-right">
@@ -83,10 +115,13 @@
                 :class="[
                   'text-xs px-2 py-1 rounded-full font-medium',
                   {
-                    'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500': topup.status === 'completed',
-                    'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400': topup.status === 'pending',
-                    'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500': topup.status === 'failed'
-                  }
+                    'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500':
+                      topup.status === 'completed',
+                    'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
+                      topup.status === 'pending',
+                    'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
+                      topup.status === 'failed',
+                  },
                 ]"
               >
                 {{ getStatusLabel(topup.status) }}
@@ -123,7 +158,12 @@
             class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V9l4-4m-8 8v4a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2h2m4 0V5a2 2 0 012-2h4a2 2 0 012 2v6a2 2 0 01-2 2h-2" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V9l4-4m-8 8v4a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2h2m4 0V5a2 2 0 012-2h4a2 2 0 012 2v6a2 2 0 01-2 2h-2"
+              />
             </svg>
             Xem lịch sử
           </router-link>
@@ -163,7 +203,7 @@ const monthlyTotal = computed(() => {
   thisMonth.setDate(1) // First day of current month
 
   return (billingStore.topupHistory?.topups || [])
-    .filter(topup => {
+    .filter((topup) => {
       const topupDate = new Date(topup.createdAt)
       return topupDate >= thisMonth && topup.status === 'completed'
     })
@@ -171,20 +211,20 @@ const monthlyTotal = computed(() => {
 })
 
 const successfulTransactions = computed(() => {
-  return (billingStore.topupHistory?.topups || [])
-    .filter(topup => topup.status === 'completed').length
+  return (billingStore.topupHistory?.topups || []).filter((topup) => topup.status === 'completed')
+    .length
 })
 
 const pendingTransactions = computed(() => {
-  return (billingStore.topupHistory?.topups || [])
-    .filter(topup => topup.status === 'pending').length
+  return (billingStore.topupHistory?.topups || []).filter((topup) => topup.status === 'pending')
+    .length
 })
 
 // Methods
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
-    currency: 'VND'
+    currency: 'VND',
   }).format(amount)
 }
 
@@ -193,31 +233,33 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('vi-VN', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   })
 }
 
 const getStatusLabel = (status: string) => {
   const statusLabels: Record<string, string> = {
-    'pending': 'Đang xử lý',
-    'processing': 'Đang xử lý',
-    'completed': 'Hoàn thành',
-    'cancelled': 'Đã hủy',
-    'refunded': 'Đã hoàn tiền',
-    'failed': 'Thất bại'
+    pending: 'Đang xử lý',
+    processing: 'Đang xử lý',
+    completed: 'Hoàn thành',
+    cancelled: 'Đã hủy',
+    refunded: 'Đã hoàn tiền',
+    failed: 'Thất bại',
   }
   return statusLabels[status] || status
 }
 
 const handleTopupSuccess = (paymentUrl: string) => {
-
   // Refresh data
   billingStore.getBalance()
-  billingStore.getTopupHistory()
+  billingStore.getTopupHistory({
+    page: 1,
+    limit: 5,
+  })
 
   // Redirect to payment URL
   if (paymentUrl) {
-    window.open(paymentUrl, "_blank", "noopener,noreferrer")
+    window.open(paymentUrl, '_blank', 'noopener,noreferrer')
   }
 }
 
@@ -225,6 +267,9 @@ const handleTopupSuccess = (paymentUrl: string) => {
 onMounted(async () => {
   await billingStore.getWallet()
   await billingStore.getBalance()
-  await billingStore.getTopupHistory(1, 5) // Load only recent 5 transactions
+  await billingStore.getTopupHistory({
+    page: 1,
+    limit: 5,
+  }) // Load only recent 5 transactions
 })
 </script>

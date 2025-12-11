@@ -32,6 +32,7 @@ export const API_ROUTES = {
     DELETE: '/users/:id',
     SOFT_DELETE: '/users/:id/soft-delete',
     GET_PROFILE: '/users/profile',
+    ADD_MONEY: '/users/:id/add-money',
   },
   TICKETS: {
     BASE: '/tickets',

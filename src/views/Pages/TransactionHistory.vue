@@ -180,12 +180,11 @@ const handleSearch = async () => {
     status: searchForm.value.status,
     paymentMethod: searchForm.value.paymentMethod
   }
+  console.log("appliedFilters", appliedFilters.value)
+  console.log("searchForm", searchForm.value)
 
   // Call API to get filtered results
-  await billingStore.getTopupHistory(
-    appliedFilters.value.page,
-    appliedFilters.value.limit
-  )
+  await billingStore.getTopupHistory(appliedFilters.value)
 
   isSearching.value = false
 }
@@ -210,19 +209,19 @@ const handleReset = async () => {
 
 const handlePageChange = async (page: number) => {
   searchForm.value.page = page
-  await billingStore.getTopupHistory(page, searchForm.value.limit || 10)
+  await billingStore.getTopupHistory(searchForm.value)
 }
 
 const handleLimitChange = async (limit: number) => {
   searchForm.value.limit = limit
   searchForm.value.page = 1
-  await billingStore.getTopupHistory(1, limit)
+  await billingStore.getTopupHistory(searchForm.value)
 }
 
 
 // Lifecycle
 onMounted(async () => {
   await billingStore.getBalance()
-  await billingStore.getTopupHistory()
+  await billingStore.getTopupHistory(searchForm.value)
 })
 </script>
