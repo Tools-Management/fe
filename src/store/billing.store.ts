@@ -3,7 +3,8 @@ import type {
   WalletTopup,
   CreateTopupRequest,
   TopupHistoryResponse,
-  WalletBalance
+  WalletBalance,
+  TopupQuery
 } from '@/types/wallet'
 import { walletService } from '@/services/wallet.service'
 import { defineStore } from 'pinia'
@@ -26,7 +27,7 @@ interface BillingActions {
   getWallet: () => Promise<void>
   getBalance: () => Promise<void>
   createTopup: (data: CreateTopupRequest) => Promise<string | null>
-  getTopupHistory: (page?: number, limit?: number) => Promise<void>
+  getTopupHistory: (query: TopupQuery) => Promise<void>
   getTopupDetail: (topupCode: string) => Promise<void>
   clearError: () => void
 }
@@ -92,7 +93,7 @@ export const useBillingStore = defineStore<
 
       try {
         const result = await walletService.getBalance()
-
+        console.log(result)
         if (result instanceof ResponseError) {
           this.error = result.message
           return
@@ -134,12 +135,12 @@ export const useBillingStore = defineStore<
       }
     },
 
-    async getTopupHistory(page = 1, limit = 20) {
+    async getTopupHistory(query: TopupQuery) {
       this.historyLoading = true
       this.error = ''
 
       try {
-        const result = await walletService.getTopupHistory({ page, limit })
+        const result = await walletService.getTopupHistory(query)
 
         if (result instanceof ResponseError) {
           this.error = result.message

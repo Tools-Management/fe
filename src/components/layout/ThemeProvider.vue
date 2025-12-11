@@ -4,7 +4,6 @@
 
 <script setup lang="ts">
 import { ref, provide, onMounted, watch, computed } from 'vue'
-
 type Theme = 'light' | 'dark'
 
 const theme = ref<Theme>('light')

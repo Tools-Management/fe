@@ -17,6 +17,15 @@
           Lịch sử giao dịch
         </router-link>
         <button
+          @click="showChangePasswordModal = true"
+          class="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H7l5-5-5-5h4l4.257 4.257A6 6 0 0117 9z" />
+          </svg>
+          Đổi mật khẩu
+        </button>
+        <button
           @click="showTopUpModal = true"
           class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
@@ -29,7 +38,7 @@
     </div>
 
     <!-- Balance Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Current Balance -->
       <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white">
         <div class="flex items-center justify-between">
@@ -40,22 +49,6 @@
           <div class="p-3 bg-white/20 rounded-full">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Total Spent -->
-      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-blue-100 text-sm font-medium">Tổng đã chi tiêu</p>
-            <p class="text-3xl font-bold mt-1">{{ formatCurrency(balance?.balance || 0) }}</p>
-            <p class="text-blue-100 text-xs mt-1">Tháng này</p>
-          </div>
-          <div class="p-3 bg-white/20 rounded-full">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
         </div>
@@ -154,10 +147,10 @@
       </form>
 
       <!-- Table -->
-      <TransactionTable :transactions="paginatedTransactions" />
+      <transaction-table :transactions="paginatedTransactions" />
 
       <!-- Pagination -->
-      <Pagination
+      <pagination
         v-if="filteredTransactions"
         :current-page="currentPage"
         :total-pages="totalPages"
@@ -169,10 +162,16 @@
     </div>
 
     <!-- Modals -->
-    <TopUpModal
+    <top-up-modal
       v-if="showTopUpModal"
       @close="showTopUpModal = false"
       @success="handleTopUpSuccess"
+    />
+
+    <change-password-modal
+      v-if="showChangePasswordModal"
+      @close="showChangePasswordModal = false"
+      @success="handleChangePasswordSuccess"
     />
   </div>
 </template>
@@ -183,11 +182,14 @@ import TopUpModal from '@/components/billing/TopUpModal.vue'
 import TransactionTable from '@/components/billing/TransactionTable.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import DatePicker from '@/components/common/DatePicker.vue'
+import ChangePasswordModal from '@/components/user/ChangePasswordModal.vue'
 import { useBillingStore } from '@/store/billing.store'
 import type { TransactionFilters } from '@/types/billing'
+import { useToast } from '@/composables/useToast'
 
 // Store
 const billingStore = useBillingStore()
+const { toastSuccess } = useToast()
 
 // Computed properties from store
 const balance = computed(() => billingStore.balance)
@@ -195,6 +197,7 @@ const topups = computed(() => billingStore.topups)
 
 // Modal and form states
 const showTopUpModal = ref(false)
+const showChangePasswordModal = ref(false)
 
 // Form and filters
 const searchForm = ref<TransactionFilters>({
@@ -274,6 +277,11 @@ const handleTopUpSuccess = () => {
   // Handle successful top-up
 }
 
+const handleChangePasswordSuccess = () => {
+  showChangePasswordModal.value = false;
+  toastSuccess('Mật khẩu đã được đổi thành công')
+}
+
 const handleSearch = async () => {
   isSearching.value = true
   currentPage.value = 1 // Reset to first page when searching
@@ -322,7 +330,9 @@ const handleLimitChange = (limit: number) => {
 // Lifecycle
 onMounted(async () => {
   await billingStore.getBalance()
-  await billingStore.getTopupHistory()
+  await billingStore.getTopupHistory({
+    page: 1,
+    limit: 10})
   // Apply initial search (no filters)
   await handleSearch()
 })
