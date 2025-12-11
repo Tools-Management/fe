@@ -49,15 +49,6 @@
           </svg>
           Tạo Nhiều Keys
         </button>
-        <button
-          @click="showCreateModal = true"
-          class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Tạo Key Mới
-        </button>
       </div>
     </div>
 
@@ -201,12 +192,6 @@
       @upgraded="handleLicenseUpgraded"
     />
 
-    <!-- License Key Management Modals -->
-    <CreateLicenseKeyModal
-      v-if="showCreateModal"
-      @close="showCreateModal = false"
-      @created="handleLicenseKeyCreated"
-    />
 
     <GenerateLicenseKeysModal
       v-if="showGenerateModal"
@@ -227,7 +212,6 @@ import { ref, computed, onMounted } from 'vue'
 import Pagination from '@/components/common/Pagination.vue'
 import LoadingBase from '@/components/common/LoadingBase.vue'
 import LicenseKeyTable from '@/components/licenses/LicenseKeyTable.vue'
-import CreateLicenseKeyModal from '@/components/licenses/CreateLicenseKeyModal.vue'
 import GenerateLicenseKeysModal from '@/components/licenses/GenerateLicenseKeysModal.vue'
 import EditLicenseKeyModal from '@/components/licenses/EditLicenseKeyModal.vue'
 import ActivateLicenseModal from '@/components/licenses/ActivateLicenseModal.vue'
@@ -245,7 +229,6 @@ const pagination = computed(() => licenseKeyStore.pagination)
 const isSearching = ref(false)
 
 // Modal states
-const showCreateModal = ref(false)
 const showGenerateModal = ref(false)
 const showActivateModal = ref(false)
 const showUpgradeModal = ref(false)
@@ -341,13 +324,6 @@ const handleLicenseActivated = () => {
 
 const handleLicenseUpgraded = () => {
   showUpgradeModal.value = false
-  loadLicenseKeys()
-  loadStats()
-}
-
-// License Key Management Handlers
-const handleLicenseKeyCreated = () => {
-  showCreateModal.value = false
   loadLicenseKeys()
   loadStats()
 }

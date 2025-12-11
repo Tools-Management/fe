@@ -1,5 +1,5 @@
 import { userService } from '@/services/user.service'
-import type { User } from '@/types/user'
+import type { User, AddMoneyRequest, AddMoneyResponse, ChangePasswordRequest, ChangePasswordResponse } from '@/types/user'
 import { ResponseError } from '@/utils/error'
 import { defineStore } from 'pinia'
 
@@ -16,6 +16,8 @@ interface UserActions {
   updateUser: (user: User) => Promise<void>
   updateUserAvatar: (file: File) => Promise<void>
   deleteUser: (id: string) => Promise<void>
+  addMoneyToWallet: (userId: string, data: AddMoneyRequest) => Promise<AddMoneyResponse | null>
+  changePassword: (data: ChangePasswordRequest) => Promise<ChangePasswordResponse | null>
 }
 
 export const useUserStore = defineStore<'user', UserState, Record<string, never>, UserActions>(
@@ -110,6 +112,45 @@ export const useUserStore = defineStore<'user', UserState, Record<string, never>
           await this.getUsers()
         } catch (error) {
           this.error = error instanceof Error ? error.message : 'An unexpected error occurred.'
+        } finally {
+          this.loading = false
+        }
+      },
+
+      async addMoneyToWallet(userId: string, data: AddMoneyRequest): Promise<AddMoneyResponse | null> {
+        this.loading = true
+        this.error = ''
+
+        try {
+          const response = await userService.addMoneyToWallet(userId, data)
+
+          if (response instanceof ResponseError) throw response
+
+          // Refresh user list to show updated balance
+          await this.getUsers()
+
+          return response.data as AddMoneyResponse
+        } catch (error) {
+          this.error = error instanceof Error ? error.message : 'Failed to add money to wallet.'
+          return null
+        } finally {
+          this.loading = false
+        }
+      },
+
+      async changePassword(data: ChangePasswordRequest): Promise<ChangePasswordResponse | null> {
+        this.loading = true
+        this.error = ''
+
+        try {
+          const response = await userService.changePassword(data)
+
+          if (response instanceof ResponseError) throw response
+
+          return response.data as ChangePasswordResponse
+        } catch (error) {
+          this.error = error instanceof Error ? error.message : 'Failed to change password.'
+          return null
         } finally {
           this.loading = false
         }

@@ -42,6 +42,7 @@
       <tool-download-link-manager
         :current-link="linkStore.toolDownloadLink"
         @edit="showDownloadModal = true"
+        @create="showCreateDownloadModal = true"
       />
     </div>
 
@@ -49,6 +50,7 @@
       <tool-intro-video-manager
         :current-link="linkStore.toolIntroVideoLink"
         @edit="showVideoModal = true"
+        @create="showCreateVideoModal = true"
       />
     </div>
   </div>
@@ -72,6 +74,22 @@
     @close="showVideoModal = false"
     @updated="showVideoModal = false"
   />
+
+  <!-- Modal Create Download -->
+  <create-link-modal
+    v-if="showCreateDownloadModal"
+    :is-download="true"
+    @close="showCreateDownloadModal = false"
+    @created="showCreateDownloadModal = false"
+  />
+
+  <!-- Modal Create Video -->
+  <create-link-modal
+    v-if="showCreateVideoModal"
+    :is-download="false"
+    @close="showCreateVideoModal = false"
+    @created="showCreateVideoModal = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -80,12 +98,15 @@ import PageBreadcrumb from '@/components/common/PageBreadcrumb.vue'
 import ToolDownloadLinkManager from '@/components/tools/ToolDownloadLinkManager.vue'
 import ToolIntroVideoManager from '@/components/tools/ToolIntroVideoManager.vue'
 import EditLinkModal from '@/components/tools/EditLinkModal.vue'
+import CreateLinkModal from '@/components/tools/CreateLinkModal.vue'
 import { useLinkStore } from '@/store/link.store'
 
 const currentPageTitle = ref('Quản Lý Link Tools')
 const activeTab = ref<'download' | 'video'>('download')
 const showDownloadModal = ref(false)
 const showVideoModal = ref(false)
+const showCreateDownloadModal = ref(false)
+const showCreateVideoModal = ref(false)
 
 const linkStore = useLinkStore()
 

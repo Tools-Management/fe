@@ -7,6 +7,11 @@ export interface User {
   role: string
   createdAt: string
   updatedAt?: string
+  wallet?: {
+    balance: number
+    currency: string
+    isActive: boolean
+  }
 }
 
 export interface LoginRequest {
@@ -95,5 +100,26 @@ export interface ResetPasswordRequest {
 }
 
 export interface ResetPasswordResponse {
+  message: string
+}
+
+export interface AddMoneyRequest {
+  amount: number
+  notes?: string
+}
+
+export interface AddMoneyResponse {
+  message: string
+  newBalance: number
+  amount: number
+  userId: number
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+}
+
+export interface ChangePasswordResponse {
   message: string
 }

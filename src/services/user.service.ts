@@ -1,6 +1,6 @@
 import { API_ROUTES } from "@/constants"
 import { apiService, type ApiResponse } from "@/lib"
-import type { User } from "@/types/user"
+import type { User, AddMoneyRequest, AddMoneyResponse, ChangePasswordRequest, ChangePasswordResponse } from "@/types/user"
 import type { ResponseError } from "@/utils/error"
 
 
@@ -10,6 +10,8 @@ export interface IUserService {
     updateUser: (user: User) => Promise<ApiResponse<User> | ResponseError>
     updateUserAvatar: (file: File) => Promise<ApiResponse<User> | ResponseError>
     deleteUser: (id: string) => Promise<ApiResponse<User> | ResponseError>
+    addMoneyToWallet: (userId: string, data: AddMoneyRequest) => Promise<ApiResponse<AddMoneyResponse> | ResponseError>
+    changePassword: (data: ChangePasswordRequest) => Promise<ApiResponse<ChangePasswordResponse> | ResponseError>
 }
 
 class UserService implements IUserService {
@@ -33,6 +35,14 @@ class UserService implements IUserService {
 
     deleteUser(id: string): Promise<ApiResponse<User> | ResponseError> {
         return apiService(API_ROUTES.USERS.DELETE).addPathParam(':id', id).delete<User>()
+    }
+
+    addMoneyToWallet(userId: string, data: AddMoneyRequest): Promise<ApiResponse<AddMoneyResponse> | ResponseError> {
+        return apiService(API_ROUTES.USERS.ADD_MONEY).addPathParam(':id', userId).put<AddMoneyResponse>(data)
+    }
+
+    changePassword(data: ChangePasswordRequest): Promise<ApiResponse<ChangePasswordResponse> | ResponseError> {
+        return apiService(API_ROUTES.USERS.CHANGE_PASSWORD).put<ChangePasswordResponse>(data)
     }
 }
 
