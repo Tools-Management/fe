@@ -26,7 +26,7 @@
           Đổi mật khẩu
         </button>
         <button
-          @click="showTopUpModal = true"
+          @click="handleTopup"
           class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +189,7 @@ import { useToast } from '@/composables/useToast'
 
 // Store
 const billingStore = useBillingStore()
-const { toastSuccess } = useToast()
+const { toastSuccess, toastInfo } = useToast()
 
 // Computed properties from store
 const balance = computed(() => billingStore.balance)
@@ -198,6 +198,11 @@ const topups = computed(() => billingStore.topups)
 // Modal and form states
 const showTopUpModal = ref(false)
 const showChangePasswordModal = ref(false)
+
+const handleTopup = () => {
+  toastInfo('Đang cập nhật lại tính năng nạp tiền tài khoản, vui lòng quay lại sau...');
+  // showTopUpModal = true
+}
 
 // Form and filters
 const searchForm = ref<TransactionFilters>({
