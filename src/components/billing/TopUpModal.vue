@@ -224,8 +224,7 @@ const handleProceedToPayment = async () => {
       // Close modal
       emit('close')
     }
-  } catch (error) {
-    console.error('Payment creation failed:', error)
+  } catch {
     isProcessing.value = false
   }
 }
