@@ -180,9 +180,6 @@ const handleSearch = async () => {
     status: searchForm.value.status,
     paymentMethod: searchForm.value.paymentMethod
   }
-  console.log("appliedFilters", appliedFilters.value)
-  console.log("searchForm", searchForm.value)
-
   // Call API to get filtered results
   await billingStore.getTopupHistory(appliedFilters.value)
 
