@@ -93,7 +93,6 @@ export const useBillingStore = defineStore<
 
       try {
         const result = await walletService.getBalance()
-        console.log(result)
         if (result instanceof ResponseError) {
           this.error = result.message
           return
