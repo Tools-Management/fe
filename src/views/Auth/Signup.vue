@@ -305,7 +305,6 @@ import { RouterLink } from 'vue-router'
 import bgSignin from '@/assets/images/bg-signin.jpg'
 import { useAuthStore } from '@/store/auth'
 import type { RegisterRequest } from '@/types/user'
-import TopUpModal from '@/components/billing/TopUpModal.vue'
 import { useToast } from '@/composables/useToast'
 const authStore = useAuthStore()
 
