@@ -39,65 +39,38 @@
                 Sign Up
               </h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Enter your email and password to sign up!
+                Enter your information to sign up!
               </p>
             </div>
             <div>
               <form @submit.prevent="handleSubmit">
                 <div class="space-y-5">
-                  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div>
                     <!-- First Name -->
                     <div class="sm:col-span-1">
                       <label
                         for="fname"
                         class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                       >
-                        First Name<span class="text-error-500">*</span>
+                        Username<span class="text-error-500">*</span>
                       </label>
                       <input
-                        v-model="firstName"
+                        v-model="username"
                         type="text"
                         id="fname"
                         name="fname"
-                        placeholder="Enter your first name"
+                        placeholder="Enter your username"
                         :class="[
                           'h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
-                          firstNameError
+                          usernameError
                             ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
                             : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
                         ]"
-                        @blur="validateFirstName"
-                        @input="firstNameError = ''"
+                        @blur="validateUsername"
+                        @input="usernameError = ''"
                       />
-                      <p v-if="firstNameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {{ firstNameError }}
-                      </p>
-                    </div>
-                    <!-- Last Name -->
-                    <div class="sm:col-span-1">
-                      <label
-                        for="lname"
-                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                      >
-                        Last Name<span class="text-error-500">*</span>
-                      </label>
-                      <input
-                        v-model="lastName"
-                        type="text"
-                        id="lname"
-                        name="lname"
-                        placeholder="Enter your last name"
-                        :class="[
-                          'h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30',
-                          lastNameError
-                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
-                            : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
-                        ]"
-                        @blur="validateLastName"
-                        @input="lastNameError = ''"
-                      />
-                      <p v-if="lastNameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {{ lastNameError }}
+                      <p v-if="usernameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {{ usernameError }}
                       </p>
                     </div>
                   </div>
@@ -332,10 +305,12 @@ import { RouterLink } from 'vue-router'
 import bgSignin from '@/assets/images/bg-signin.jpg'
 import { useAuthStore } from '@/store/auth'
 import type { RegisterRequest } from '@/types/user'
+import { useToast } from '@/composables/useToast'
 const authStore = useAuthStore()
 
-const firstName = ref('')
-const lastName = ref('')
+const { toastSuccess } = useToast()
+
+const username = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
@@ -343,36 +318,22 @@ const agreeToTerms = ref(false)
 const isLoading = ref(false)
 
 // Validation errors
-const firstNameError = ref('')
-const lastNameError = ref('')
+const usernameError = ref('')
 const emailError = ref('')
 const passwordError = ref('')
 const termsError = ref('')
 const generalError = ref('')
 
 // Validation methods
-const validateFirstName = () => {
-  if (!firstName.value.trim()) {
-    firstNameError.value = 'Tên là bắt buộc'
+const validateUsername = () => {
+  if (!username.value) {
+    usernameError.value = 'Tên là bắt buộc'
     return false
-  } else if (firstName.value.trim().length < 2) {
-    firstNameError.value = 'Tên phải có ít nhất 2 ký tự'
-    return false
-  } else {
-    firstNameError.value = ''
-    return true
-  }
-}
-
-const validateLastName = () => {
-  if (!lastName.value.trim()) {
-    lastNameError.value = 'Họ là bắt buộc'
-    return false
-  } else if (lastName.value.trim().length < 2) {
-    lastNameError.value = 'Họ phải có ít nhất 2 ký tự'
+  } else if (username.value.length < 3) {
+    usernameError.value = 'Tên phải có ít nhất 3 ký tự'
     return false
   } else {
-    lastNameError.value = ''
+    usernameError.value = ''
     return true
   }
 }
@@ -418,18 +379,16 @@ const validateTerms = () => {
 }
 
 const validateForm = () => {
-  const isFirstNameValid = validateFirstName()
-  const isLastNameValid = validateLastName()
+  const isUsernameValid = validateUsername()
   const isEmailValid = validateEmail()
   const isPasswordValid = validatePassword()
   const isTermsValid = validateTerms()
 
-  return isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isTermsValid
+  return isUsernameValid && isEmailValid && isPasswordValid && isTermsValid
 }
 
 const clearErrors = () => {
-  firstNameError.value = ''
-  lastNameError.value = ''
+  usernameError.value = ''
   emailError.value = ''
   passwordError.value = ''
   termsError.value = ''
@@ -450,23 +409,32 @@ const handleSubmit = async () => {
 
   try {
     const registerData: RegisterRequest = {
-      username: `${firstName.value.trim()}${lastName.value.trim()}`,
+      username: username.value.trim().replace(" ", ""),
       email: email.value.trim(),
       password: password.value,
-    }
+    }    
 
-    const result = await authStore.register(registerData)
+    const result = await authStore.register(registerData)    
+
     
     if (result) {
-      generalError.value = result
+      if (result === 'Validation failed') {
+        generalError.value = 'Username phải 3–50 ký tự, chỉ gồm chữ, số và _'
+      } else if (result && result.includes('already exists')) {
+      generalError.value = 'Email này đã được sử dụng. Vui lòng sử dụng email khác hoặc đăng nhập nếu bạn đã có tài khoản.'
+    } else {
+        generalError.value = result
+      }
       return
     }
-    // If successful, authStore will handle navigation to verify-otp
+    toastSuccess('Đăng ký thành công, vui lòng kiểm tra email để xác thực OTP')
 
   } catch (error: unknown) {
-    const err = error as { message?: string }
+    const err = error as { message?: string }    
     if (err.message && err.message.includes('already exists')) {
       generalError.value = 'Email này đã được sử dụng. Vui lòng sử dụng email khác hoặc đăng nhập nếu bạn đã có tài khoản.'
+    } else if (err.message && err.message.includes('Validation failed')) {
+      generalError.value = 'Username phải 3–50 ký tự, chỉ gồm chữ, số và _'
     } else {
       generalError.value = err.message || 'Đăng ký thất bại. Vui lòng thử lại.'
     }

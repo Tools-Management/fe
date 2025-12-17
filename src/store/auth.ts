@@ -8,6 +8,7 @@ import { USER_ROLES } from '@/constants'
 
 interface AuthState {
   user: User | null
+  isAuthenticated: boolean
   accessToken: string
   refreshToken: string
   expiresIn: number
@@ -39,6 +40,7 @@ export const useAuthStore = defineStore<
 >('auth', {
   state: (): AuthState => ({
     user: null,
+    isAuthenticated: false,
     accessToken: '',
     refreshToken: '',
     expiresIn: 0,
@@ -73,6 +75,7 @@ export const useAuthStore = defineStore<
         const { user, tokens } = result.data  
 
         this.user = user
+        this.isAuthenticated = true
         this.accessToken = tokens.accessToken
         this.refreshToken = tokens.refreshToken
         this.expiresIn = tokens.expiresIn
@@ -102,7 +105,7 @@ export const useAuthStore = defineStore<
           this.error = result.message
           return
         }
-
+        this.isAuthenticated = true;
         this.user = result.data
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
@@ -185,6 +188,7 @@ export const useAuthStore = defineStore<
     async logout() {
       try {
         await authService.logout()
+        this.isAuthenticated = false
       } finally {
         this.$reset()
         router.push('/')

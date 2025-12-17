@@ -189,9 +189,12 @@ import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 import bgSignin from '@/assets/images/bg-signin.jpg'
 import { useAuthStore } from '@/store/auth'
 import type { VerifyOtpRequest, ResendOtpRequest } from '@/types/user'
+import { useToast } from '@/composables/useToast'
 
 // Router & Route
 const route = useRoute()
+
+const { toastSuccess } = useToast()
 
 // Store
 const authStore = useAuthStore()
@@ -291,6 +294,7 @@ const handleSubmit = async () => {
       generalError.value = result
       return
     }
+    toastSuccess('Đăng ký thành công, vui lòng kiểm tra email để xác thực OTP')
     // If successful, authStore will handle navigation
   } catch (error: unknown) {
     generalError.value =

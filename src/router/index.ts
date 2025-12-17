@@ -28,37 +28,61 @@ const router = createRouter({
           path: '/tools',
           name: 'Tools',
           component: () => import('@/views/Tools/Tool.vue'),
-          meta: { title: 'Tools', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Tools',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: '/account',
           name: 'AccountManagement',
           component: () => import('@/views/Pages/AccountManagement.vue'),
-          meta: { title: 'Quản lý tài khoản', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Quản lý tài khoản',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: '/wallet',
           name: 'WalletDashboard',
           component: () => import('@/views/Pages/WalletDashboard.vue'),
-          meta: { title: 'Ví của tôi', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Ví của tôi',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: '/transaction-history',
           name: 'TransactionHistory',
           component: () => import('@/views/Pages/TransactionHistory.vue'),
-          meta: { title: 'Lịch sử giao dịch', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Lịch sử giao dịch',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: '/purchase-license',
           name: 'PurchaseLicense',
           component: () => import('@/views/Tools/PurchaseLicense.vue'),
-          meta: { title: 'Mua License Key', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Mua License Key',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: '/my-keys',
           name: 'MyLicenseKeys',
           component: () => import('@/views/Tools/MyLicenseKeys.vue'),
-          meta: { title: 'Keys Đã Mua', requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER] },
+          meta: {
+            title: 'Keys Đã Mua',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
         },
         {
           path: 'keys',
@@ -180,47 +204,65 @@ const router = createRouter({
   ],
 })
 
-// Cập nhật title
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title ? `AIRemake ${to.meta.title}` : 'AIRemake Pro'
+// // Cập nhật title
+// router.beforeEach((to, from, next) => {
+//   document.title = to.meta.title ? `AIRemake ${to.meta.title}` : 'AIRemake Pro'
 
-  const authStore = useAuthStore()
+//   const authStore = useAuthStore()
 
-  // Route yêu cầu đăng nhập
-  if (to.meta.requiresAuth) {
-    if (!authStore.user) {
-      return next('/signin')
-    }
+//   // Route yêu cầu đăng nhập
+//   if (to.meta.requiresAuth) {
+//     if (!authStore.user) {
+//       return next('/signin')
+//     }
 
-    // Route giới hạn roles
-    if (to.meta.roles && Array.isArray(to.meta.roles)) {
-      const userRole = authStore.user?.role
+//     // Route giới hạn roles
+//     if (to.meta.roles && Array.isArray(to.meta.roles)) {
+//       const userRole = authStore.user?.role
 
-      const allowedRoles = to.meta.roles
+//       const allowedRoles = to.meta.roles
 
-      if (!allowedRoles.includes(userRole)) {
-        // alert('Bạn không có quyền truy cập trang này!')
-        return next('/404')
-      }
-    }
-  }
-
-  next()
-})
-
-// beforeEach((to, from, next) => {
-//   const user = JSON.parse(localStorage.getItem('current_user') || '{}')
-//   const role = user.role
-
-//   if (role?.startsWith('ROLE_STAFF')) {
-//     const perms = JSON.parse(localStorage.getItem('permission_system') || '{}')
-//     const rolePerms = perms[role]
-//     if (rolePerms && !rolePerms[to.path]?.view) {
-//       alert('Bạn không có quyền truy cập trang này!')
-//       return next('/dashboard')
+//       if (!allowedRoles.includes(userRole)) {
+//         // alert('Bạn không có quyền truy cập trang này!')
+//         return next('/404')
+//       }
 //     }
 //   }
+
 //   next()
 // })
+
+router.beforeEach(async (to, _from, next) => {
+  const publicRouteNames = ['Home', 'Signin', 'Signup', 'VerifyOTP', 'NotFound']
+  const authStore = useAuthStore()
+
+  if (publicRouteNames.includes(to.name as string)) {
+    return next()
+  }
+
+  if (!authStore.isAuthenticated) {
+    await authStore.getMe()
+  }
+
+  if (!authStore.isAuthenticated || !authStore.user) {
+    return next({
+      name: 'NotFound',
+    })
+  }
+
+  if (to.meta.roles && Array.isArray(to.meta.roles)) {
+    const userRole = authStore.user?.role
+
+    const allowedRoles = to.meta.roles
+
+    if (!allowedRoles.includes(userRole)) {
+      // alert('Bạn không có quyền truy cập trang này!')
+      return next({
+        name: 'NotFound',
+      })
+    }
+  }
+  return next()
+})
 
 export default router
