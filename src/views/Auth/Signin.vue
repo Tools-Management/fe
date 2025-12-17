@@ -266,7 +266,7 @@ import { ref, computed, watch } from 'vue'
 import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 import bgSignin from '@/assets/images/bg-signin.jpg'
 import { useAuthStore } from '@/store/auth'
-
+import { useToast } from '@/composables/useToast'
 // Reactive data
 const email = ref('')
 const password = ref('')
@@ -281,6 +281,8 @@ const passwordError = ref('')
 const generalError = ref('')
 
 const authStore = useAuthStore()
+
+const { toastSuccess } = useToast()
 
 // Computed
 const isFormValid = computed(() => {
@@ -355,7 +357,7 @@ const handleSubmit = async () => {
       generalError.value = "Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại."
       return
     }
-
+    toastSuccess('Đăng nhập thành công')
     // If login successful, authStore will handle navigation
   } catch (error: unknown) {
     const err = error as { message?: string; status?: number }

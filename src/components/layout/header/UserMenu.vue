@@ -1,4 +1,6 @@
 <template>
+  <loading-home :is-loading="authStore.loading" />
+
   <div class="relative" ref="dropdownRef">
     <button
       v-if="user"
@@ -8,7 +10,10 @@
     >
       <span class="mr-3 overflow-hidden rounded-full h-11 w-11 border border-gray-200">
         <img v-if="user?.image" :src="user?.image" alt="User" />
-        <span v-else class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+        <span
+          v-else
+          class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold"
+        >
           {{ user?.email[0].toUpperCase() }}
         </span>
       </span>
@@ -66,14 +71,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ChevronDownIcon,
-  LogoutIcon,
-  SendIcon,
-} from '@/icons/index'
+import { ChevronDownIcon, LogoutIcon, SendIcon } from '@/icons/index'
 import { RouterLink, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useAuthStore } from '@/store/auth'
+import LoadingHome from '@/components/common/LoadingHome.vue'
 
 const route = useRoute()
 
@@ -107,7 +109,10 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
+  if (authStore.isAuthenticated === false) {
+    authStore.getMe()
+  }
   document.addEventListener('click', handleClickOutside)
 })
 
