@@ -234,6 +234,12 @@ export function apiService(url: string) {
       parseApiResponse(http.put<ApiResponseRaw<K>>(url, data, config)),
     delete: <K>(config?: AxiosRequestConfig) =>
       parseApiResponse(http.delete<ApiResponseRaw<K>>(url, config)),
+    getBlob(): Promise<Blob> {
+      return http.get<Blob>(url, {
+        params: queryParams,
+        responseType: 'blob',
+      }).then(res => res.data)
+    }
   }
 
   return api
