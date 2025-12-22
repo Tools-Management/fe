@@ -26,7 +26,7 @@
               id="amount"
               v-model="amount"
               placeholder="Nhập số tiền..."
-              min="1000"
+              min="10000"
               class="w-full px-6 py-4 text-xl font-medium border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all outline-none"
               required
             />
