@@ -126,9 +126,8 @@
                 :class="{ 'text-gray-800 dark:text-white/90': form.order }"
               >
                 <option value="">Chọn đơn hàng</option>
-                <option value="ACTCHaF1V8">Phần mềm Max Care (ACTCHaF1V8)</option>
-                <option value="remake-PRO-2025">Gói Remake Pro 2025</option>
-                <option value="API-ACCESS">API Access Key</option>
+                <option value="remake-PRO">Gói Remake Pro</option>
+                <option value="API-ACCESS">API Key</option>
               </select>
               <span
                 class="absolute z-30 text-gray-500 -translate-y-1/2 pointer-events-none right-4 top-1/2 dark:text-gray-400"

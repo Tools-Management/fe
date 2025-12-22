@@ -156,6 +156,16 @@ const router = createRouter({
             roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
           },
         },
+        {
+          path: '/deposit',
+          name: 'TopupPage',
+          component: () => import('@/views/TopupPage.vue'),
+          meta: {
+            title: 'Nạp Tiền',
+            requiresAuth: true,
+            roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN, USER_ROLES.ROLE_USER],
+          },
+        },
       ],
     },
 

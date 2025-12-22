@@ -184,11 +184,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { useBillingStore } from '@/store/billing.store'
 import TopUpModal from '@/components/billing/TopUpModal.vue'
-import { useToast } from '@/composables/useToast'
+import { useRouter } from 'vue-router'
 
 // Store
 const billingStore = useBillingStore()
-const { toastInfo } = useToast()
+const router = useRouter();
 
 // Reactive data
 const showTopupModal = ref(false)
@@ -252,7 +252,7 @@ const getStatusLabel = (status: string) => {
 }
 
 const handleTopup = () => {
-  toastInfo('Đang cập nhật lại tính năng nạp tiền tài khoản, vui lòng quay lại sau...');
+  router.push({ name: 'TopupPage' })
   // showTopupModal.value = true
 }
 

@@ -186,10 +186,12 @@ import ChangePasswordModal from '@/components/user/ChangePasswordModal.vue'
 import { useBillingStore } from '@/store/billing.store'
 import type { TransactionFilters } from '@/types/billing'
 import { useToast } from '@/composables/useToast'
+import { useRouter } from 'vue-router'
 
 // Store
-const billingStore = useBillingStore()
-const { toastSuccess, toastInfo } = useToast()
+const billingStore = useBillingStore();
+const { toastSuccess } = useToast();
+const router = useRouter();
 
 // Computed properties from store
 const balance = computed(() => billingStore.balance)
@@ -200,7 +202,7 @@ const showTopUpModal = ref(false)
 const showChangePasswordModal = ref(false)
 
 const handleTopup = () => {
-  toastInfo('Đang cập nhật lại tính năng nạp tiền tài khoản, vui lòng quay lại sau...');
+  router.push({ name: 'TopupPage' });
   // showTopUpModal = true
 }
 

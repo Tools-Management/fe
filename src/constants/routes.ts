@@ -72,4 +72,9 @@ export const API_ROUTES = {
     TOPUP_DETAIL: '/wallet/topups/:topupCode',
     VNPAY_RETURN: '/wallet/vnpay/return',
   },
+  TOPUP_PAY: {
+    GET_QRCODE: '/payments/get-qrcode',
+    QR_PAY: '/payments/qr-pay',
+    CREATE_TOPUP: '/payments/create-topup',
+  },
 }
