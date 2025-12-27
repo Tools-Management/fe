@@ -65,7 +65,7 @@
             <span class="text-green-400">✓</span> {{ isAuthenticated ? `${stats.total}+ license keys` : 'Hàng trăm license keys có sẵn' }}
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-green-400">✓</span> {{ isAuthenticated ? `${stats.used + 500}+ khách hàng` : '500+ khách hàng tin dùng' }}
+            <span class="text-green-400">✓</span> {{ isAuthenticated ? `${stats.used}+ khách hàng` : '500+ khách hàng tin dùng' }}
           </div>
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span> Hỗ trợ 24/7
@@ -83,17 +83,14 @@
       </h2>
 
       <div class="grid md:grid-cols-3 gap-8">
-        <div
-          v-for="feature in features"
-          :key="feature.title"
-          class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition transform hover:-translate-y-2"
-        >
-          <div
-            class="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 p-3"
-            v-html="feature.icon"
-          ></div>
-          <h3 class="text-2xl font-bold mb-3">{{ feature.title }}</h3>
-          <p class="text-gray-300">{{ feature.desc }}</p>
+        <div v-for="tool in toolsInfo" :key="tool.title" class="flex">
+          <feature-card
+            :icon="tool.icon as any"
+            :title="tool.title"
+            :desc="tool.desc"
+            :tags="tool.tags"
+            :isHome="true"
+          />
         </div>
       </div>
     </section>
@@ -210,11 +207,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import FeatureCard from '../FeatureCard.vue'
 import { LICENSE_PRICING } from '@/constants'
 import { useLicenseKeyStore } from '@/store/license_key.store'
 import { useAuthStore } from '@/store/auth'
+import { toolsInfo } from '@/data/tools'
 
 // Router
 const router = useRouter()
@@ -249,62 +248,7 @@ const handleSelectPlan = () => {
 }
 
 // SVG Icons as string (safe with v-html)
-const features = ref([
-  {
-    title: 'Copy Link YouTube',
-    desc: 'Copy link YouTube → Có ngay video mới bằng AI. Phân tích và remake video theo phong cách bạn muốn chỉ với 1 link.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-      </svg>
-    `,
-  },
-  {
-    title: 'Kho Prompt Dựng Sẵn',
-    desc: 'Kho prompt dựng sẵn + Xuất video 9:16 chuẩn Shorts / TikTok / Reels. Tạo video viral chỉ với vài click.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    `,
-  },
-  {
-    title: 'Tạo Video Từ Text Prompt',
-    desc: 'Tạo video hoàn toàn mới từ text prompt. AI hiểu ý tưởng của bạn và biến thành video chất lượng cao.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </svg>
-    `,
-  },
-  {
-    title: 'Remake Từ Hình Ảnh',
-    desc: 'Tạo Video Mới Tương Tự Từ Hình Ảnh Của Video Gốc. Giữ nguyên nội dung, thay đổi phong cách hoàn toàn.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    `,
-  },
-  {
-    title: 'AI Character Creator',
-    desc: 'AI CHARACTER CREATOR – TỐI ƯU TẠO NHÂN VẬT ĐỒNG BỘ. Tạo series video với nhân vật nhất quán.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-    `,
-  },
-  {
-    title: 'Tự Động Đăng Video',
-    desc: 'Tự động đăng video lên YouTube, TikTok, Facebook ngay sau khi dựng xong. Tiết kiệm thời gian, không cần thao tác thủ công.',
-    icon: `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M16 8l-4-4m0 0L8 8m4-4v12" />
-      </svg>
-    `,
-  },
-])
+// const features = ref([]) // Removed, using toolsInfo instead
 
 // Lifecycle
 onMounted(async () => {
