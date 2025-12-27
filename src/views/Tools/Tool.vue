@@ -1,5 +1,5 @@
 <!-- eslint-disable vue/multi-word-component-names -->
- <template>
+<template>
   <div class="min-h-screen bg-white text-gray-800">
     <!-- Header -->
     <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-6 shadow-lg">
@@ -48,50 +48,25 @@
       <section class="mb-16">
         <h3 class="text-2xl font-bold text-center mb-8">Tính năng nổi bật</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex items-start space-x-3 bg-blue-50 p-5 rounded-lg">
+          <div
+            v-for="(tool, index) in toolsInfo"
+            :key="tool.title"
+            :class="[
+              'flex items-start space-x-3 p-5 rounded-lg',
+              index % 2 === 0 ? 'bg-blue-50' : 'bg-indigo-50',
+            ]"
+          >
             <div
-              class="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold"
+              :class="[
+                'flex-shrink-0 w-10 h-10 text-white rounded-full flex items-center justify-center font-bold text-xl',
+                index % 2 === 0 ? 'bg-blue-600' : 'bg-indigo-700',
+              ]"
             >
-              1
+              {{ index + 1 }}
             </div>
             <div>
-              <h4 class="font-semibold text-gray-900">Xóa nền tự động bằng AI</h4>
-              <p class="text-gray-600">Loại bỏ nền xanh hoặc phức tạp chỉ trong 1 click.</p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3 bg-indigo-50 p-5 rounded-lg">
-            <div
-              class="flex-shrink-0 w-10 h-10 bg-indigo-700 text-white rounded-full flex items-center justify-center font-bold"
-            >
-              2
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-900">Tạo phụ đề AI chính xác 98%</h4>
-              <p class="text-gray-600">Hỗ trợ tiếng Việt, tự động đồng bộ lời nói.</p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3 bg-blue-50 p-5 rounded-lg">
-            <div
-              class="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold"
-            >
-              3
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-900">Chỉnh sửa bằng lệnh văn bản</h4>
-              <p class="text-gray-600">
-                Gõ: "Cắt đoạn im lặng", "Thêm logo góc phải" → AI làm ngay.
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3 bg-indigo-50 p-5 rounded-lg">
-            <div
-              class="flex-shrink-0 w-10 h-10 bg-indigo-700 text-white rounded-full flex items-center justify-center font-bold"
-            >
-              4
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-900">Xuất file 4K không watermark</h4>
-              <p class="text-gray-600">Sẵn sàng đăng YouTube, TikTok, Reels.</p>
+              <h4 class="font-semibold text-gray-900">{{ tool.title }}</h4>
+              <p class="text-gray-600">{{ tool.desc }}</p>
             </div>
           </div>
         </div>
@@ -105,7 +80,7 @@
           @click="handleDownload"
           class="inline-block bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
         >
-          Dùng Thử Miễn Phí
+          Tải về ngay
         </button>
         <p class="mt-4 text-sm text-gray-500">
           Bản dùng thử đầy đủ tính năng • Không cần thẻ tín dụng • Hỗ trợ Windows & macOS
@@ -116,8 +91,9 @@
 </template>
 
 <script setup lang="ts">
-import { useLinkStore } from '@/store/link.store';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue'
+import { useLinkStore } from '@/store/link.store'
+import { toolsInfo } from '@/data/tools'
 
 const linkStore = useLinkStore()
 

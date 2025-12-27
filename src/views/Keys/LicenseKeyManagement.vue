@@ -4,7 +4,9 @@
   <div class="space-y-5 sm:space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+      <h1
+        class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent"
+      >
         Quản Lý License Keys
       </h1>
       <div class="flex flex-wrap gap-3">
@@ -14,7 +16,12 @@
           class="bg-gradient-to-r from-purple-600 to-pink-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
           </svg>
           Đồng Bộ Keys
         </button>
@@ -25,7 +32,12 @@
           class="bg-gradient-to-r from-orange-600 to-red-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
           </svg>
           Nâng Cấp License
         </button>
@@ -34,7 +46,12 @@
           class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           Kích Hoạt License
         </button>
@@ -45,7 +62,12 @@
           class="bg-gradient-to-r from-teal-600 to-cyan-700 text-white px-4 py-2.5 rounded-lg font-medium hover:shadow-lg transition flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           Tạo Nhiều Keys
         </button>
@@ -69,11 +91,16 @@
     </div>
 
     <!-- Stats by Duration -->
-    <div v-if="stats.byDuration && stats.byDuration.length > 0" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Thống Kê Theo Thời Hạn</h3>
+    <div
+      v-if="stats.byDuration && stats.byDuration.length > 0"
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6"
+    >
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+        Thống Kê Theo Thời Hạn
+      </h3>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div 
-          v-for="item in stats.byDuration" 
+        <div
+          v-for="item in stats.byDuration"
           :key="item.duration"
           class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600"
         >
@@ -107,12 +134,23 @@
               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select v-model="searchForm.isActive" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+          <!-- <select v-model="searchForm.isActive" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
             <option value="">Tất cả trạng thái</option>
             <option value="true">Đang hoạt động</option>
             <option value="false">Không hoạt động</option>
+          </select> -->
+          <select
+            v-model="searchForm.isUsed"
+            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Tất cả tình trạng</option>
+            <option value="false">Chưa bán</option>
+            <option value="true">Đã bán</option>
           </select>
-          <select v-model="searchForm.duration" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+          <select
+            v-model="searchForm.duration"
+            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
             <option value="">Tất cả thời hạn</option>
             <option value="1d">1 ngày</option>
             <option value="7d">7 ngày</option>
@@ -122,26 +160,42 @@
             <option value="365d">365 ngày</option>
           </select>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <select v-model="searchForm.isUsed" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="">Tất cả tình trạng</option>
-            <option value="false">Chưa sử dụng</option>
-            <option value="true">Đã sử dụng</option>
-          </select>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
         <div class="flex justify-center gap-3">
           <button
             type="submit"
             :disabled="isSearching"
             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
           >
-            <svg v-if="isSearching" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              v-if="isSearching"
+              class="animate-spin h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <span v-else>
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
               </svg>
             </span>
             Tìm kiếm
@@ -152,7 +206,12 @@
             class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
           >
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              ></path>
             </svg>
             Đặt lại
           </button>
@@ -162,11 +221,7 @@
 
     <!-- License Keys Table -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-      <LicenseKeyTable
-        :license-keys="licenseKeys"
-        @edit="openEditModal"
-        @delete="confirmDelete"
-      />
+      <LicenseKeyTable :license-keys="licenseKeys" @edit="openEditModal" @delete="confirmDelete" />
     </div>
 
     <!-- Pagination -->
@@ -192,11 +247,7 @@
       @upgraded="handleLicenseUpgraded"
     />
 
-
-    <GenerateLicenseKeysModal
-      v-if="showGenerateModal"
-      @close="showGenerateModal = false"
-    />
+    <GenerateLicenseKeysModal v-if="showGenerateModal" @close="showGenerateModal = false" />
 
     <EditLicenseKeyModal
       v-if="selectedLicenseKey"
@@ -239,7 +290,7 @@ const searchForm = ref({
   query: '',
   isActive: '',
   isUsed: '',
-  duration: ''
+  duration: '',
 })
 
 // Pagination state
@@ -281,7 +332,9 @@ const handleSyncLicenseKeys = async () => {
   try {
     const result = await licenseKeyStore.syncLicenseKeys()
     if (result) {
-      alert(`Đồng bộ thành công!\nTạo mới: ${result.synced}\nCập nhật: ${result.updated}\nBỏ qua: ${result.skipped}`)
+      alert(
+        `Đồng bộ thành công!\nTạo mới: ${result.synced}\nCập nhật: ${result.updated}\nBỏ qua: ${result.skipped}`,
+      )
     }
   } catch {
     alert('Có lỗi xảy ra khi đồng bộ license keys')
@@ -356,9 +409,6 @@ const confirmDelete = async (licenseKey: ILicenseKey) => {
 
 // Lifecycle
 onMounted(async () => {
-  await Promise.all([
-    loadLicenseKeys(),
-    loadStats(),
-  ])
+  await Promise.all([loadLicenseKeys(), loadStats()])
 })
 </script>

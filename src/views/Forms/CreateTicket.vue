@@ -28,7 +28,7 @@
           </p>
           <p class="text-sm mt-2">Chúng tôi sẽ phản hồi trong vòng 1-2 giờ làm việc.</p>
           <router-link
-            to="/ticket-support/list"
+            to="/ticket-support"
             class="mt-3 inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Xem danh sách ticket
@@ -118,7 +118,7 @@
               >Đơn hàng (nếu có)</label
             >
 
-            <div class="relative z-20 bg-transparent">
+            <!-- <div class="relative z-20 bg-transparent">
               <select
                 id="order"
                 v-model="form.order"
@@ -126,6 +126,7 @@
                 :class="{ 'text-gray-800 dark:text-white/90': form.order }"
               >
                 <option value="">Chọn đơn hàng</option>
+                <option value="Nap-tien">Nạp tiền tài khoản</option>
                 <option value="remake-PRO">Gói Remake Pro</option>
                 <option value="API-ACCESS">API Key</option>
               </select>
@@ -149,7 +150,7 @@
                   />
                 </svg>
               </span>
-            </div>
+            </div> -->
           </div>
 
           <!-- Số điện thoại -->
