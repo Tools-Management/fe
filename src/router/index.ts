@@ -183,6 +183,12 @@ const router = createRouter({
       ],
     },
     {
+      path: '/forward',
+      name: 'ForwardPage',
+      component: () => import('@/views/Forward/ForwardPage.vue'),
+      meta: { title: 'Forward Page' },
+    },
+    {
       path: '/signin',
       name: 'Signin',
       component: () => import('@/views/Auth/Signin.vue'),
