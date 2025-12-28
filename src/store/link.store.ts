@@ -7,8 +7,14 @@ import type { LinkCreationRequest, LinkResponse, LinkUpdateRequest } from '@/typ
 interface LinkState {
   toolDownloadLinkId: string
   toolIntroVideoLinkId: string
+  imageOrVideoPreviewLinkId: string
+  typeImageOrVideoPreview: LINK_TYPES.INTERSTITIAL_IMAGE | LINK_TYPES.INTERSTITIAL_VIDEO
+  targetLinkId: string
+  typeTargetLink: LINK_TYPES.DESTINATION_URL
   toolDownloadLink: string
   toolIntroVideoLink: string
+  imageOrVideoPreviewLink: string
+  targetLink: string
   loading: boolean
   error: string
 }
@@ -25,8 +31,14 @@ export const useLinkStore = defineStore<'link', LinkState, Record<string, never>
     state: (): LinkState => ({
       toolDownloadLinkId: '',
       toolIntroVideoLinkId: '',
+      imageOrVideoPreviewLinkId: '',
+      typeImageOrVideoPreview: LINK_TYPES.INTERSTITIAL_IMAGE,
+      targetLinkId: '',
+      typeTargetLink: LINK_TYPES.DESTINATION_URL,
       toolDownloadLink: '',
       toolIntroVideoLink: '',
+      imageOrVideoPreviewLink: '',
+      targetLink: '',
       loading: false,
       error: '',
     }),
@@ -43,13 +55,31 @@ export const useLinkStore = defineStore<'link', LinkState, Record<string, never>
 
           const links = response.data as LinkResponse[]
 
-          const download = links.find((l) => l.type === LINK_TYPES.DOWNLOAD)
-          const intro = links.find((l) => l.type === LINK_TYPES.INTRO_VIDEO)
+          for (const l of links) {
+            switch (l.type) {
+              case LINK_TYPES.DOWNLOAD:
+                this.toolDownloadLink = l.link
+                this.toolDownloadLinkId = l.id.toString()
+                break
 
-          this.toolDownloadLink = download?.link || ''
-          this.toolDownloadLinkId = download?.id.toString() || ''
-          this.toolIntroVideoLink = intro?.link || ''
-          this.toolIntroVideoLinkId = intro?.id.toString() || ''
+              case LINK_TYPES.INTRO_VIDEO:
+                this.toolIntroVideoLink = l.link
+                this.toolIntroVideoLinkId = l.id.toString()
+                break
+
+              case LINK_TYPES.INTERSTITIAL_IMAGE:
+              case LINK_TYPES.INTERSTITIAL_VIDEO:
+                this.imageOrVideoPreviewLink = l.link
+                this.imageOrVideoPreviewLinkId = l.id.toString()
+                this.typeImageOrVideoPreview = l.type
+                break
+
+              case LINK_TYPES.DESTINATION_URL:
+                this.targetLink = l.link
+                this.targetLinkId = l.id.toString()
+                break
+            }
+          }
         } catch (error) {
           this.error = error instanceof Error ? error.message : 'An unexpected error occurred.'
         } finally {
@@ -68,12 +98,28 @@ export const useLinkStore = defineStore<'link', LinkState, Record<string, never>
 
           const link = response.data as LinkResponse
 
-          if (link.type === LINK_TYPES.DOWNLOAD) {
-            this.toolDownloadLink = link.link
-            this.toolDownloadLinkId = link.id.toString()
-          } else if (link.type === LINK_TYPES.INTRO_VIDEO) {
-            this.toolIntroVideoLink = link.link
-            this.toolIntroVideoLinkId = link.id.toString()
+          switch (link.type) {
+            case LINK_TYPES.DOWNLOAD:
+              this.toolDownloadLink = link.link
+              this.toolDownloadLinkId = link.id.toString()
+              break
+
+            case LINK_TYPES.INTRO_VIDEO:
+              this.toolIntroVideoLink = link.link
+              this.toolIntroVideoLinkId = link.id.toString()
+              break
+
+            case LINK_TYPES.INTERSTITIAL_IMAGE:
+            case LINK_TYPES.INTERSTITIAL_VIDEO:
+              this.imageOrVideoPreviewLink = link.link
+              this.imageOrVideoPreviewLinkId = link.id.toString()
+              this.typeImageOrVideoPreview = link.type
+              break
+
+            case LINK_TYPES.DESTINATION_URL:
+              this.targetLink = link.link
+              this.targetLinkId = link.id.toString()
+              break
           }
         } catch (error) {
           this.error = error instanceof Error ? error.message : 'An unexpected error occurred.'
