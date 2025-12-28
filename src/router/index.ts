@@ -220,36 +220,8 @@ const router = createRouter({
   ],
 })
 
-// // Cập nhật title
-// router.beforeEach((to, from, next) => {
-//   document.title = to.meta.title ? `AIRemake ${to.meta.title}` : 'AIRemake Pro'
-
-//   const authStore = useAuthStore()
-
-//   // Route yêu cầu đăng nhập
-//   if (to.meta.requiresAuth) {
-//     if (!authStore.user) {
-//       return next('/signin')
-//     }
-
-//     // Route giới hạn roles
-//     if (to.meta.roles && Array.isArray(to.meta.roles)) {
-//       const userRole = authStore.user?.role
-
-//       const allowedRoles = to.meta.roles
-
-//       if (!allowedRoles.includes(userRole)) {
-//         // alert('Bạn không có quyền truy cập trang này!')
-//         return next('/404')
-//       }
-//     }
-//   }
-
-//   next()
-// })
-
 router.beforeEach(async (to, _from, next) => {
-  const publicRouteNames = ['Home', 'Signin', 'Signup', 'VerifyOTP', 'NotFound']
+  const publicRouteNames = ['Home', 'Signin', 'Signup', 'VerifyOTP', 'NotFound', 'ForwardPage']
   const authStore = useAuthStore()
 
   if (publicRouteNames.includes(to.name as string)) {
