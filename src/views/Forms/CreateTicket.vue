@@ -113,12 +113,12 @@
           </div>
 
           <!-- Đơn hàng -->
-          <div>
+          <!-- <div>
             <label for="order" class="text-sm font-medium text-gray-700 dark:text-gray-400 mb-2"
               >Đơn hàng (nếu có)</label
             >
 
-            <!-- <div class="relative z-20 bg-transparent">
+            <div class="relative z-20 bg-transparent">
               <select
                 id="order"
                 v-model="form.order"
@@ -150,8 +150,8 @@
                   />
                 </svg>
               </span>
-            </div> -->
-          </div>
+            </div>
+          </div> -->
 
           <!-- Số điện thoại -->
           <div>
