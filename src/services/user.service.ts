@@ -1,6 +1,6 @@
 import { API_ROUTES } from "@/constants"
 import { apiService, type ApiResponse } from "@/lib"
-import type { User, AddMoneyRequest, AddMoneyResponse, ChangePasswordRequest, ChangePasswordResponse } from "@/types/user"
+import type { User, AddMoneyRequest, AddMoneyResponse, ChangePasswordRequest, ChangePasswordResponse, UpdateRoleRequest } from "@/types/user"
 import type { ResponseError } from "@/utils/error"
 
 
@@ -9,6 +9,7 @@ export interface IUserService {
     getUserById: (id: string) => Promise<ApiResponse<User> | ResponseError>
     updateUser: (user: User) => Promise<ApiResponse<User> | ResponseError>
     updateUserAvatar: (file: File) => Promise<ApiResponse<User> | ResponseError>
+    updateRoleByAdmin: (request: UpdateRoleRequest) => Promise<ApiResponse<boolean> | ResponseError>
     deleteUser: (id: string) => Promise<ApiResponse<User> | ResponseError>
     addMoneyToWallet: (userId: string, data: AddMoneyRequest) => Promise<ApiResponse<AddMoneyResponse> | ResponseError>
     changePassword: (data: ChangePasswordRequest) => Promise<ApiResponse<ChangePasswordResponse> | ResponseError>
@@ -31,6 +32,10 @@ class UserService implements IUserService {
         const formData = new FormData()
         formData.append('avatar', file)
         return apiService(API_ROUTES.USERS.UPDATE_AVATAR).put<User>(formData)
+    }
+
+    updateRoleByAdmin(request: UpdateRoleRequest): Promise<ApiResponse<boolean> | ResponseError> {
+        return apiService(API_ROUTES.USERS.UPDATE_ROLE_BY_ADMIN).put<boolean>(request)
     }
 
     deleteUser(id: string): Promise<ApiResponse<User> | ResponseError> {

@@ -28,6 +28,7 @@ export const API_ROUTES = {
     GET_BY_ROLE: '/users/role/:role',
     UPDATE_PROFILE: '/users/profile',
     UPDATE_AVATAR: '/users/profile/avatar',
+    UPDATE_ROLE_BY_ADMIN: '/users/update-role',
     CHANGE_PASSWORD: '/users/change-password',
     DELETE: '/users/:id',
     SOFT_DELETE: '/users/:id/soft-delete',

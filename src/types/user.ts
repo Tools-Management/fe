@@ -123,3 +123,16 @@ export interface ChangePasswordRequest {
 export interface ChangePasswordResponse {
   message: string
 }
+
+export enum  userRoles {
+  ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_STAFF = 'ROLE_STAFF',
+  ROLE_USER = 'ROLE_USER',
+  ROLE_GUEST = 'ROLE_GUEST',
+  ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN',
+}
+
+export interface UpdateRoleRequest {
+  userId: number;
+  role: userRoles;
+}
