@@ -11,13 +11,15 @@
       />
 
       <iframe
-  v-else-if="typeImageOrVideoPreview === LINK_TYPES.INTERSTITIAL_VIDEO && imageOrVideoPreviewLink"
-  class="media-preview"
-  :src="youtubeEmbedUrl"
-  frameborder="0"
-  allow="autoplay; encrypted-media"
-  allowfullscreen
-></iframe>
+        v-else-if="
+          typeImageOrVideoPreview === LINK_TYPES.INTERSTITIAL_VIDEO && imageOrVideoPreviewLink
+        "
+        class="media-preview"
+        :src="youtubeEmbedUrl"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      ></iframe>
 
       <div class="redirect-box">
         <p class="countdown">
@@ -49,7 +51,7 @@ const linkStore = useLinkStore()
 const { imageOrVideoPreviewLink, typeImageOrVideoPreview, targetLink, loading, error } =
   storeToRefs(linkStore)
 
-  const youtubeEmbedUrl = computed(() => {
+const youtubeEmbedUrl = computed(() => {
   if (!imageOrVideoPreviewLink.value) return ''
 
   try {
@@ -117,7 +119,7 @@ onUnmounted(() => {
 .content {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -130,8 +132,8 @@ onUnmounted(() => {
 }
 
 /* BOX CHUYỂN HƯỚNG */
-.redirect-box {
-  position: absolute;
+  /* .redirect-box {
+position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -139,9 +141,18 @@ onUnmounted(() => {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.4), transparent);
   color: #fff;
   backdrop-filter: blur(6px);
+} */
+.redirect-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.4), transparent);
+  z-index: 10;
 }
 
 .countdown {
+  color: white;
   font-size: 1rem;
   margin-bottom: 10px;
 }
@@ -179,6 +190,7 @@ onUnmounted(() => {
   border-radius: 999px;
   cursor: pointer;
   font-weight: 500;
+  margin-bottom: 10px;
 }
 
 .skip-btn:hover {
