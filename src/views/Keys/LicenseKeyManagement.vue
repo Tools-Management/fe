@@ -302,6 +302,7 @@ const loadLicenseKeys = async () => {
   const params: {
     page: number
     limit: number
+    key?: string
     duration?: string
     isUsed?: boolean
     isActive?: boolean
@@ -311,6 +312,9 @@ const loadLicenseKeys = async () => {
   }
 
   // Add filters if present
+  if (searchForm.value.query) {
+    params.key = searchForm.value.query
+  }
   if (searchForm.value.duration) {
     params.duration = searchForm.value.duration
   }

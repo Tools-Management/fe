@@ -20,6 +20,7 @@ export interface ILicenseKeyService {
   getAllLicenseKeys: (params?: {
     page?: number
     limit?: number
+    key?: string
     duration?: string
     isUsed?: boolean
     isActive?: boolean
@@ -43,6 +44,7 @@ class LicenseKeyService implements ILicenseKeyService {
   getAllLicenseKeys(params?: {
     page?: number
     limit?: number
+    key?: string
     duration?: string
     isUsed?: boolean
     isActive?: boolean
