@@ -29,6 +29,7 @@ interface LicenseKeyActions {
   getLicenseKeys: (params?: {
     page?: number
     limit?: number
+    key?: string
     duration?: string
     isUsed?: boolean
     isActive?: boolean

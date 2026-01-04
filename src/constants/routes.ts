@@ -70,6 +70,7 @@ export const API_ROUTES = {
     BALANCE: '/wallet/balance',
     CREATE_TOPUP: '/wallet/topup',
     TOPUPS: '/wallet/topups',
+    ADMIN_TOPUPS: '/wallet/admin/topups',
     TOPUP_DETAIL: '/wallet/topups/:topupCode',
     VNPAY_RETURN: '/wallet/vnpay/return',
   },
