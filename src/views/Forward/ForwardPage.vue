@@ -34,7 +34,22 @@
           Đích đến: <span>{{ targetDomain }}</span>
         </p>
 
-        <button class="skip-btn" @click="redirectNow">Chuyển ngay</button>
+        <div
+          v-if="shouldShowOpenInSafari"
+          class="ios-guide p-4 rounded-lg bg-gray-900 text-white shadow-lg mx-auto max-w-sm"
+        >
+          <p class="text-red-400 mb-2 text-base font-semibold">
+            🔒 iOS không cho mở ứng dụng từ trình duyệt này.
+          </p>
+          <p class="text-gray-200 text-sm leading-relaxed">
+            👉 Vui lòng nhấn <strong>⋯</strong> hoặc biểu tượng <strong>Share</strong> (Chia sẻ)<br />
+            → chọn <strong>Mở bằng Safari</strong><br />
+            → link sẽ tự mở ứng dụng Shopee / Zalo.
+          </p>
+        </div>
+        <button v-if="!shouldShowOpenInSafari" class="skip-btn" @click="redirectNow">
+          Chuyển ngay
+        </button>
       </div>
     </div>
   </div>
@@ -78,8 +93,44 @@ const targetDomain = computed(() => {
   }
 })
 
+const isIOSInAppBrowser = computed(() => {
+  const userAgent = navigator.userAgent
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent)
+
+  // Kiểm tra các chỉ số trình duyệt nhúng phổ biến trên iOS
+  const isFacebookInApp = userAgent.includes('FBAV') || userAgent.includes('FBSV')
+  const isZaloInApp = userAgent.includes('ZaloWebApp')
+  // Thêm các kiểm tra trình duyệt nhúng khác nếu cần, ví dụ:
+  // const isLineInApp = userAgent.includes('Line');
+  // const isInstagramInApp = userAgent.includes('Instagram');
+
+  // Phát hiện WebView chung trên iOS: sự vắng mặt của 'Safari' trong userAgent
+  // và sự hiện diện của 'AppleWebKit' xác nhận đó là một WebView iOS.
+  const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent)
+
+  return isIOS && (isFacebookInApp || isZaloInApp || isWebView)
+})
+
+const isDeepLink = computed(() => {
+  if (!targetLink.value) return false
+  const url = targetLink.value.toLowerCase()
+  // Thêm các lược đồ deep link khác nếu cần
+  return (
+    url.startsWith('shopee://') ||
+    url.startsWith('zalo://') ||
+    url.includes('shopee.vn') ||
+    url.includes('zalo.me')
+  )
+})
+
+const shouldShowOpenInSafari = computed(() => isIOSInAppBrowser.value && isDeepLink.value)
+
 const redirectNow = () => {
   if (targetLink.value) {
+    if (shouldShowOpenInSafari.value) {
+      // Trên iOS in-app browser với deep link, chỉ hiển thị hướng dẫn, không tự động chuyển hướng.
+      return
+    }
     window.location.href = targetLink.value
   }
 }
@@ -88,6 +139,12 @@ watch(targetLink, (val) => {
   if (!val) return
 
   remainSeconds.value = TOTAL_TIME
+
+  if (shouldShowOpenInSafari.value && timer) {
+    clearInterval(timer)
+    timer = undefined
+    return
+  }
 
   timer = window.setInterval(() => {
     remainSeconds.value--
@@ -132,16 +189,6 @@ onUnmounted(() => {
 }
 
 /* BOX CHUYỂN HƯỚNG */
-  /* .redirect-box {
-position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 16px 20px 20px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.4), transparent);
-  color: #fff;
-  backdrop-filter: blur(6px);
-} */
 .redirect-box {
   position: fixed;
   bottom: 0;

@@ -30,6 +30,12 @@ export interface PaymentMethod {
   icon: string
 }
 
+export enum BILLING_PAYMENT_METHOD {
+  VN_PAY = 'vn_pay',
+  QR_PAY = 'QR-PAY',
+  PAYMENT = 'PAYMENT',
+}
+
 // Top-up types
 export interface TopUpRequest {
   amount: number

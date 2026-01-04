@@ -10,6 +10,7 @@ import { walletService } from '@/services/wallet.service'
 import { defineStore } from 'pinia'
 import { ResponseError } from '@/utils/error'
 import { HttpStatusCode } from 'axios'
+import type { AdminTopupQuery } from '@/types/admin'
 
 interface BillingState {
   wallet: UserWallet | null
@@ -17,6 +18,7 @@ interface BillingState {
   topups: WalletTopup[]
   currentTopup: WalletTopup | null
   topupHistory: TopupHistoryResponse | null
+  adminTopupHistory: TopupHistoryResponse | null
   loading: boolean
   error: string
   topupLoading: boolean
@@ -28,6 +30,7 @@ interface BillingActions {
   getBalance: () => Promise<void>
   createTopup: (data: CreateTopupRequest) => Promise<string | null>
   getTopupHistory: (query: TopupQuery) => Promise<void>
+  getAllTopupHistoryByAdmin: (query: AdminTopupQuery) => Promise<void>
   getTopupDetail: (topupCode: string) => Promise<void>
   clearError: () => void
 }
@@ -49,6 +52,7 @@ export const useBillingStore = defineStore<
     topups: [],
     currentTopup: null,
     topupHistory: null,
+    adminTopupHistory: null,
     loading: false,
     error: '',
     topupLoading: false,
@@ -147,6 +151,29 @@ export const useBillingStore = defineStore<
         }
 
         this.topupHistory = result.data
+        this.topups = result.data.topups
+      } catch (err) {
+        if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)
+          return
+        this.error = err instanceof Error ? err.message : 'An unexpected error occurred.'
+      } finally {
+        this.historyLoading = false
+      }
+    },
+
+    async getAllTopupHistoryByAdmin(query: AdminTopupQuery) {
+      this.historyLoading = true
+      this.error = ''
+
+      try {
+        const result = await walletService.getAllTopupHistoryByAdmin(query)
+
+        if (result instanceof ResponseError) {
+          this.error = result.message
+          return
+        }
+
+        this.adminTopupHistory = result.data
         this.topups = result.data.topups
       } catch (err) {
         if (err instanceof ResponseError && err.status === HttpStatusCode.InternalServerError)

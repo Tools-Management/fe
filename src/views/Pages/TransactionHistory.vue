@@ -29,9 +29,8 @@
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-300"
             >
               <option value="">Tất cả</option>
+              <option value="PAYMENT">PAYMENT</option>
               <option value="QR-PAY">QR-PAY</option>
-              <option value="vnpay">VNPay</option>
-              <option value="atm">ATM/Internet Banking</option>
             </select>
           </div>
 
@@ -108,6 +107,7 @@ import TransactionTable from '@/components/billing/TransactionTable.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import { useBillingStore } from '@/store/billing.store'
 import type { TopupQuery } from '@/types/wallet'
+import { BILLING_PAYMENT_METHOD } from '@/types/billing'
 
 // Store
 const billingStore = useBillingStore()
@@ -159,6 +159,7 @@ const totalTransactions = computed(() => filteredTransactions.value.length)
 
 const totalAmount = computed(() => {
   return topups.value
+    .filter(t => t.paymentMethod !== BILLING_PAYMENT_METHOD.PAYMENT)
     .filter(t => t.status === 'completed')
     .reduce((sum, t) => sum + t.amount, 0)
 })

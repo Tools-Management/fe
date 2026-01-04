@@ -1,3 +1,5 @@
+import type { User } from "./user"
+
 export interface UserWallet {
   id: number
   userId: number
@@ -33,6 +35,7 @@ export interface WalletTopup {
   failedAt?: string
   createdAt: string
   updatedAt: string
+  user?: User
 }
 
 export interface CreateTopupRequest {

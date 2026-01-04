@@ -8,6 +8,7 @@ import type {
   TopupHistoryResponse,
   WalletBalance,
 } from '@/types/wallet'
+import type { AdminTopupQuery } from '@/types/admin'
 import type { ResponseError } from '@/utils/error'
 import { API_ROUTES } from '@/constants'
 
@@ -19,6 +20,9 @@ export interface IWalletService {
   ) => Promise<ApiResponse<CreateTopupResponse> | ResponseError>
   getTopupHistory: (
     query: TopupQuery
+  ) => Promise<ApiResponse<TopupHistoryResponse> | ResponseError>
+  getAllTopupHistoryByAdmin: (
+    query: AdminTopupQuery
   ) => Promise<ApiResponse<TopupHistoryResponse> | ResponseError>
   getTopupDetail: (
     topupCode: string
@@ -54,6 +58,24 @@ class WalletService implements IWalletService {
     if (query.paymentMethod) queryParams.paymentMethod = query.paymentMethod
   
     return apiService(API_ROUTES.WALLET.TOPUPS)
+      .addQueryParam(queryParams)
+      .get<TopupHistoryResponse>()
+  }
+
+  getAllTopupHistoryByAdmin(
+    query: AdminTopupQuery
+  ): Promise<ApiResponse<TopupHistoryResponse> | ResponseError> {
+    const queryParams: Record<string, string | number | boolean | null | undefined> = {}
+  
+    if (query.page) queryParams.page = query.page
+    if (query.limit) queryParams.limit = query.limit
+    if (query.status) queryParams.status = query.status
+    if (query.paymentMethod) queryParams.paymentMethod = query.paymentMethod
+    if (query.userId) queryParams.userId = query.userId
+    if (query.startDate) queryParams.startDate = query.startDate
+    if (query.endDate) queryParams.endDate = query.endDate
+
+    return apiService(API_ROUTES.WALLET.ADMIN_TOPUPS)
       .addQueryParam(queryParams)
       .get<TopupHistoryResponse>()
   }
