@@ -88,19 +88,15 @@
           >
             <div class="flex items-center gap-3">
               <div class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full">
-                <svg
-                  class="w-4 h-4 text-green-600 dark:text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <span
+                  class="w-full text-sm font-semibold"
+                  :class="{
+                    'text-green-600': topup.paymentMethod !== BILLING_PAYMENT_METHOD.PAYMENT,
+                    'text-red-600': topup.paymentMethod === BILLING_PAYMENT_METHOD.PAYMENT,
+                  }"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
+                  {{ topup.paymentMethod === BILLING_PAYMENT_METHOD.PAYMENT ? '-' : '+' }}
+                </span>
               </div>
               <div>
                 <p class="font-medium text-gray-900 dark:text-gray-100">{{ topup.topupCode }}</p>
@@ -110,7 +106,16 @@
               </div>
             </div>
             <div class="text-right">
-              <p class="font-semibold text-green-600">+{{ formatCurrency(topup.amount) }}</p>
+              <p
+                class="text-sm font-semibold"
+                :class="{
+                  'text-green-600': topup.paymentMethod !== BILLING_PAYMENT_METHOD.PAYMENT,
+                  'text-red-600': topup.paymentMethod === BILLING_PAYMENT_METHOD.PAYMENT,
+                }"
+              >
+                {{ topup.paymentMethod === BILLING_PAYMENT_METHOD.PAYMENT ? '-' : '+'
+                }}{{ formatCurrency(topup.amount) }}
+              </p>
               <span
                 :class="[
                   'text-xs px-2 py-1 rounded-full font-medium',
@@ -137,7 +142,7 @@
 
         <div class="space-y-4">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600 dark:text-gray-400">Tổng nạp tháng này</span>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Tiền nạp vào</span>
             <span class="font-semibold text-green-600">{{ formatCurrency(monthlyTotal) }}</span>
           </div>
 
@@ -185,10 +190,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useBillingStore } from '@/store/billing.store'
 import TopUpModal from '@/components/billing/TopUpModal.vue'
 import { useRouter } from 'vue-router'
+import { BILLING_PAYMENT_METHOD } from '@/types/billing'
 
 // Store
 const billingStore = useBillingStore()
-const router = useRouter();
+const router = useRouter()
 
 // Reactive data
 const showTopupModal = ref(false)
@@ -205,6 +211,7 @@ const monthlyTotal = computed(() => {
   thisMonth.setDate(1) // First day of current month
 
   return (billingStore.topupHistory?.topups || [])
+    .filter((topup) => topup.paymentMethod !== BILLING_PAYMENT_METHOD.PAYMENT)
     .filter((topup) => {
       const topupDate = new Date(topup.createdAt)
       return topupDate >= thisMonth && topup.status === 'completed'
