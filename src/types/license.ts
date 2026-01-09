@@ -20,6 +20,16 @@ export interface ILicenseKey {
   }
 }
 
+export interface ILicenseQuery {
+  page?: number
+  limit?: number
+  email?: string
+  machineId?: string
+  externalId?: string
+  licenseKey?: string
+  isActive?: boolean
+}
+
 export interface ICreateLicenseKeyRequest {
   key: string
   isActive: boolean
@@ -41,6 +51,7 @@ export interface IGenerateLicenseKeysRequest {
 export interface ILicense {
   id: string
   email: string
+  externalId: string;
   machineId: string
   licenseKey: string
   isActive: boolean
@@ -48,6 +59,16 @@ export interface ILicense {
   expiresAt: string // ISO date-time
   activatedAt: string // ISO date-time
   lastValidatedAt: string // ISO date-time
+}
+
+export interface ILicenseResponse {
+  data: ILicense[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 // License request types (matches API types)
@@ -61,6 +82,16 @@ export interface IUpgradeLicenseRequest {
   email: string
   machineId: string
   newLicenseKey: string
+}
+
+export interface ILicenseUpdateRequest {
+  email?: string
+  machineId?: string
+  licenseKey?: string
+  isActive?: boolean
+  expiresAt?: Date | null
+  activatedAt?: string | null
+  lastValidatedAt?: string | null
 }
 
 // Stats types
