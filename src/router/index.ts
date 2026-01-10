@@ -137,6 +137,12 @@ const router = createRouter({
           meta: { requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN] },
         },
         {
+          path: 'licenses',
+          name: 'LicensesManagement',
+          component: () => import('@/views/Keys/LicenseManagement.vue'),
+          meta: { requiresAuth: true, roles: [USER_ROLES.ROLE_ADMIN, USER_ROLES.ROLE_SUPER_ADMIN] },
+        },
+        {
           path: 'all-transaction-history',
           name: 'AllTransactionHistory',
           component: () => import('@/views/Users/AllTransactionHistory.vue'),
