@@ -49,6 +49,9 @@ export const API_ROUTES = {
     UPGRADE: '/api-management/licenses/upgrade',
     VALIDATE: '/api-management/licenses/validate',
     ACTIVATE: '/api-management/licenses/activate',
+    SYNC: 'licenses/sync',
+    GET_ALL: 'licenses',
+    UPDATE: 'licenses/:id',
   },
   LICENSE_KEYS: {
     BASE: '/license-keys',
